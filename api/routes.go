@@ -2,16 +2,28 @@ package api
 
 import (
 	"github.com/drejt/api/controllers"
-	"github.com/drejt/config"
+	"github.com/gin-gonic/gin"
 )
 
-func InitRoutes() {
-	initAuthRouter()
+type Router interface {
+	SetupRouter(router *gin.Engine)
 }
 
-func initAuthRouter() {
-	authRouter := config.App.Group("/api/v1/auth")
-	authRouter.POST("/login", controllers.LoginAuth)
-	// authRouter.GET("/login")
-	authRouter.POST("/register", controllers.RegisterAuth)
+type router struct{}
+
+func NewRouter() Router {
+	return &router{}
+}
+
+// SetupRouter configuration router information
+func (r *router) SetupRouter(router *gin.Engine) {
+	// Setup route group for the API
+	api := router.Group("/api/v1")
+	{
+		authRouter := api.Group("/api/v1/auth")
+		authRouter.POST("/login", controllers.LoginAuth)
+		// authRouter.GET("/login")
+		authRouter.POST("/register", controllers.RegisterAuth)
+
+	}
 }

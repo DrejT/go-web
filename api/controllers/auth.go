@@ -21,8 +21,22 @@ func LoginAuth(ctx *gin.Context) {
 	})
 }
 
+type RegisterRequest struct {
+	Username string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"`
+	Email    string `json:"email" binding:"required"`
+}
+
 func RegisterAuth(ctx *gin.Context) {
+	var registerReq RegisterRequest
+	if err := ctx.ShouldBindJSON(&registerReq); err != nil {
+		ctx.JSON(400, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
 	ctx.JSON(200, gin.H{
-		"message": "helo",
+		"message": "registration successful",
+		"data":    registerReq,
 	})
 }
