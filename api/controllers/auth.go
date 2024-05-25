@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -30,12 +32,12 @@ type RegisterRequest struct {
 func RegisterAuth(ctx *gin.Context) {
 	var registerReq RegisterRequest
 	if err := ctx.ShouldBindJSON(&registerReq); err != nil {
-		ctx.JSON(400, gin.H{
+		ctx.JSON(http.StatusOK, gin.H{
 			"error": err.Error(),
 		})
 		return
 	}
-	ctx.JSON(200, gin.H{
+	ctx.JSON(http.StatusOK, gin.H{
 		"message": "registration successful",
 		"data":    registerReq,
 	})

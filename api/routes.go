@@ -20,7 +20,7 @@ func (r *router) SetupRouter(router *gin.Engine) {
 	// Setup route group for the API
 	api := router.Group("/api/v1")
 	{
-		authRouter := api.Group("/api/v1/auth")
+		authRouter := api.Group("/auth")
 		authRouter.POST("/login", controllers.LoginAuth)
 		// authRouter.GET("/login")
 		authRouter.POST("/register", controllers.RegisterAuth)

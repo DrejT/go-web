@@ -19,10 +19,12 @@ export default function useLoginForm() {
   const navigate = useNavigate();
   async function onSubmit(data: FormValues) {
     try {
+      console.log(data);
       const res = await axios.post(API_URL + "auth/login", data);
       console.log(res);
       if (res.status === 200) {
         const responseData = res.data as FormResponse;
+        console.log(responseData);
         localStorage.setItem("token", responseData.token);
         const user = JSON.stringify(responseData.data);
         localStorage.setItem("user", user);

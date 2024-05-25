@@ -14,11 +14,11 @@ clean: vet
 build: clean
 	cd web && npm run build && cd .. && go build -o main ./main.go
 
-run: build
-	./main
+server: vet
+	go build -o main && ./main
 
-server: clean
-	go build -o main ./main.go
+client:
+	cd web && npm run dev
 
-dev: vet
+dev:
 	./main

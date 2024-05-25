@@ -3,6 +3,7 @@ module github.com/drejt
 go 1.21.10
 
 require (
+	github.com/gin-contrib/cors v1.7.2
 	github.com/gin-contrib/static v1.1.2
 	github.com/gin-gonic/gin v1.10.0
 )
