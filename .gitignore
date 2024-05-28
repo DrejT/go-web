@@ -27,3 +27,4 @@ web/*.sw?
 .env.local
 
 main
+.vercel
