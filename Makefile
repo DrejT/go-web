@@ -11,7 +11,7 @@ clean: vet
 	rm -rf ./web/dist
 	go clean
 
-build:
+build: clean
 	cd web && npm install && npm run build && cd .. && go build -o main ./main.go
 
 server: vet
