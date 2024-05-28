@@ -12,7 +12,7 @@ clean: vet
 	go clean
 
 build:
-	cd web && npm run build && cd .. && go build -o main ./main.go
+	cd web && npm install && npm run build && cd .. && go build -o main ./main.go
 
 server: vet
 	go build -o main && ./main
