@@ -9,22 +9,26 @@ fmt:
 vet: fmt
 	go vet ./main.go
 
-# clean previous builds of server and client
+# clean previous builds of  client
 # if present
-clean: vet
+clean-client:
 	rm -rf ./web/dist
+
+# clean previous builds of server
+# if present
+clean-server: vet
 	go clean
 
 # build server and client
-build: clean
+build: clean-server clean-client
 	cd web && npm install && npm run build && cd .. && go build -o main ./main.go
 
 # build server only
-server: clean
+server: clean-server
 	go build -o main && ./main
 
 # build client only
-client: clean
+client: clean-client
 	cd web && npm run dev
 
 # run the server binary
