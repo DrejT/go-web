@@ -25,5 +25,8 @@ func (r *router) SetupRouter(router *gin.Engine) {
 		// authRouter.GET("/login")
 		authRouter.POST("/register", controllers.RegisterAuth)
 
+		userRouter := api.Group("/user")
+		userRouter.GET("/", controllers.GetUserByUsername)
+
 	}
 }
