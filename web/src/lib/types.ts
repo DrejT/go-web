@@ -20,10 +20,10 @@ export interface searchDataContextProps {
 }
 
 export interface authContextProps {
-  token: string;
-  user: string;
-  setUser: Dispatch<SetStateAction<string>> | null;
-  setToken: Dispatch<SetStateAction<string>> | null;
+  isLoggedIn: boolean;
+  username: string;
+  setIsLoggedIn: Dispatch<SetStateAction<boolean>> | null;
+  setUsername: Dispatch<SetStateAction<string>> | null;
 }
 
 // login form response

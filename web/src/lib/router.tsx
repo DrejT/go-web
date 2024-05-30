@@ -10,7 +10,6 @@ import { LandingLayout } from "@/layouts/landing";
 import Root from "@/layouts/root";
 import { useAuth } from "./../hooks/useAuth";
 import { useEffect, useState } from "react";
-import { postData } from "./fetch";
 import RegisterFormLayout from "@/layouts/register";
 import LoginPage from "@/pages/login";
 import RegisterPage from "@/pages/register";

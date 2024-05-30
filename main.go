@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"github.com/drejt/api"
 	"github.com/drejt/config"
 
@@ -22,5 +24,8 @@ func main() {
 
 	router.SetupRouter(app)
 
-	app.Run() // listen and serve on 0.0.0.0:8080
+	err := app.Run() // listen and serve on 0.0.0.0:8080
+	if err != nil {
+		log.Fatalf(err.Error())
+	}
 }

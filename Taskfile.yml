@@ -1,0 +1,54 @@
+version: "3"
+
+tasks:
+  default:
+    cmds:
+      - task: lint
+
+  lint:
+    desc: lint the go files
+    sources:
+      - "./**/**/*.go"
+    cmds:
+      - golangci-lint run
+
+  clean-client:
+    desc: clean previous builds of the client
+    cmds:
+      - rm -rf ./web/dist
+
+  clean-server:
+    desc: clean current builds of the server
+    cmds:
+      - task: lint
+      - go clean
+
+  build:
+    desc: build both server and client
+    cmds:
+      - task: clean-server
+      - task: clean-client
+      - cd web && npm install && npm run build && cd .. && go build -o main ./main.go
+
+  server:
+    desc: build and run only the server
+    generates:
+      - ./main
+    cmds:
+      - task: clean-server
+      - go build -o main ./main.go
+      - ./main
+
+  client:
+    desc: build and run only the client
+    cmds:
+      - task: clean-client
+      - cd web && npm run dev
+
+  # run:
+  #   desc: run the server binary
+  #   cmds:
+  #     - task: server
+  #     - ./main
+
+run: "always"
