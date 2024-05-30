@@ -26,5 +26,6 @@ web/*.sw?
 .env
 .env.local
 
+.task
 main
 .vercel
