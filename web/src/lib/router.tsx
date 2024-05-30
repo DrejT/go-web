@@ -15,6 +15,8 @@ import RegisterFormLayout from "@/layouts/register";
 import LoginPage from "@/pages/login";
 import RegisterPage from "@/pages/register";
 import SearchPage from "@/pages/search";
+import axios from "axios";
+import { API_URL } from "./utils";
 
 export function Router() {
   return (
@@ -45,9 +47,9 @@ export function Router() {
                 </RegisterFormLayout>
               }
             />
+            <Route path="search" element={<SearchPage />} />
+            <Route path=":username" element={<Pro />} />
           </Route>
-          <Route path="search" element={<SearchPage />} />
-          <Route path=":username" element={<Pro />} />
         </Route>
       </Routes>
     </BrowserRouter>
@@ -56,14 +58,18 @@ export function Router() {
 
 function Pro() {
   const params = useParams();
-  const { user, token } = useAuth();
+  const { isLoggedIn, username } = useAuth();
   const [data, setData] = useState<boolean>(false);
-  console.log(user, token);
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await postData("user/", {}).then((res) => res.json());
-        setData(res);
+        const res = await axios.post(
+          API_URL + "user/",
+          { username: params.username },
+          { withCredentials: true }
+        );
+        console.log(res);
+        // setData(res);
       } catch (error) {
         console.log(error);
       }
@@ -73,13 +79,13 @@ function Pro() {
       setData(!data);
     }
   });
-  const u = JSON.parse(user);
-  if (u.username === params.username && token) {
+  // const u = JSON.parse(user);
+  if (isLoggedIn && username === params.username) {
     return (
       <>
         welcome back
         <br />
-        {u.username}
+        {params.username}
         <Outlet />
       </>
     );

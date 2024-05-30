@@ -1,8 +1,10 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
@@ -11,13 +13,19 @@ type LoginRequest struct {
 	Password string `json:"password" binding:"required"`
 }
 
-func LoginAuth(ctx *gin.Context) {
+func LoginAuth(c *gin.Context) {
 	var loginReq LoginRequest
-	if err := ctx.ShouldBindJSON(&loginReq); err != nil {
-		ctx.JSON(400, gin.H{"error": err.Error()})
+	if err := c.ShouldBindJSON(&loginReq); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
-	ctx.JSON(200, gin.H{
+	session := sessions.Default(c)
+	session.Set("username", loginReq.Username)
+	if err := session.Save(); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save session"})
+		return
+	}
+	c.JSON(200, gin.H{
 		"message": "Login successful",
 		"data":    loginReq,
 	})
@@ -29,16 +37,29 @@ type RegisterRequest struct {
 	Email    string `json:"email" binding:"required"`
 }
 
-func RegisterAuth(ctx *gin.Context) {
+func RegisterAuth(c *gin.Context) {
 	var registerReq RegisterRequest
-	if err := ctx.ShouldBindJSON(&registerReq); err != nil {
-		ctx.JSON(http.StatusOK, gin.H{
+	if err := c.ShouldBindJSON(&registerReq); err != nil {
+		c.JSON(http.StatusOK, gin.H{
 			"error": err.Error(),
 		})
 		return
 	}
-	ctx.JSON(http.StatusOK, gin.H{
+	c.JSON(http.StatusOK, gin.H{
 		"message": "registration successful",
 		"data":    registerReq,
 	})
+}
+
+func RevalidateSession(c *gin.Context) {
+	session := sessions.Default(c)
+	u := session.Get("username")
+	fmt.Println(u)
+	if u == nil {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"message": "please login",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "you are logged in", "username": u})
 }

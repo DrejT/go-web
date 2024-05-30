@@ -3,6 +3,7 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { FormResponse } from "@/lib/types";
+import { useAuth } from "./useAuth";
 
 interface FormValues {
   username: string;
@@ -17,17 +18,21 @@ export default function useLoginForm() {
     handleSubmit,
   } = useForm<FormValues>();
   const navigate = useNavigate();
+  const { setIsLoggedIn } = useAuth();
   async function onSubmit(data: FormValues) {
     try {
       console.log(data);
-      const res = await axios.post(API_URL + "auth/login", data);
+      const res = await axios.post(API_URL + "auth/login", data, {
+        withCredentials: true,
+      });
       console.log(res);
       if (res.status === 200) {
         const responseData = res.data as FormResponse;
-        console.log(responseData);
-        localStorage.setItem("token", responseData.token);
-        const user = JSON.stringify(responseData.data);
-        localStorage.setItem("user", user);
+        setIsLoggedIn(true);
+        // console.log(responseData);
+        // localStorage.setItem("token", responseData.token);
+        // const user = JSON.stringify(responseData.data);
+        // localStorage.setItem("user", user);
         navigate("/" + responseData.data.username);
       }
     } catch (error) {

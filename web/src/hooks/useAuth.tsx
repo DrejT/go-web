@@ -1,9 +1,26 @@
-import { useState } from "react";
+import { API_URL } from "@/lib/utils";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 export function useAuth() {
-  const [user, setUser] = useState<string>(localStorage.getItem("user") || "");
-  const [token, setToken] = useState<string>(
-    localStorage.getItem("token") || ""
-  );
-  return { user, token, setToken, setUser };
+  const [username, setUsername] = useState<string>("");
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  useEffect(() => {
+    try {
+      (async function () {
+        const res = await axios.get(API_URL + "auth/session", {
+          withCredentials: true,
+        });
+        if (res.status === 200) {
+          setIsLoggedIn(true);
+          console.log(res);
+          setUsername(res.data.username);
+        }
+      })();
+    } catch (error) {
+      console.log(error);
+    }
+  }, [isLoggedIn]);
+  console.log(isLoggedIn, username);
+  return { username, isLoggedIn, setIsLoggedIn, setUsername };
 }

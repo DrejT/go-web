@@ -2,6 +2,7 @@ package api
 
 import (
 	"github.com/drejt/api/controllers"
+	"github.com/drejt/api/middlewares"
 	"github.com/gin-gonic/gin"
 )
 
@@ -24,9 +25,11 @@ func (r *router) SetupRouter(router *gin.Engine) {
 		authRouter.POST("/login", controllers.LoginAuth)
 		// authRouter.GET("/login")
 		authRouter.POST("/register", controllers.RegisterAuth)
+		authRouter.GET("/session", controllers.RevalidateSession)
 
 		userRouter := api.Group("/user")
-		userRouter.GET("/", controllers.GetUserByUsername)
+		userRouter.Use(middlewares.VerifySession())
+		userRouter.POST("/", controllers.GetUserByUsername)
 
 	}
 }
