@@ -36,6 +36,6 @@ interface DataResponse {
 }
 
 export interface FormResponse {
-  token: string;
+  username: string;
   data: DataResponse;
 }

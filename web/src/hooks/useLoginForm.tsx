@@ -18,22 +18,20 @@ export default function useLoginForm() {
     handleSubmit,
   } = useForm<FormValues>();
   const navigate = useNavigate();
-  const { setIsLoggedIn } = useAuth();
+  const { setIsLoggedIn, setUsername } = useAuth();
   async function onSubmit(data: FormValues) {
     try {
       console.log(data);
       const res = await axios.post(API_URL + "auth/login", data, {
         withCredentials: true,
       });
-      console.log(res);
+      // console.log(res);
       if (res.status === 200) {
         const responseData = res.data as FormResponse;
+        console.log(responseData, res);
         setIsLoggedIn(true);
-        // console.log(responseData);
-        // localStorage.setItem("token", responseData.token);
-        // const user = JSON.stringify(responseData.data);
-        // localStorage.setItem("user", user);
-        navigate("/" + responseData.data.username);
+        setUsername(responseData.username);
+        navigate("/" + responseData.username);
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
