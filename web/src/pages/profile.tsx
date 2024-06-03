@@ -1,3 +1,11 @@
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { ProfileAvatar } from "@/components/landing/navbar";
 import { useAuth } from "@/hooks/useAuth";
 import { API_URL } from "@/lib/utils";
@@ -7,6 +15,10 @@ import {
   // Outlet,
   useParams,
 } from "react-router-dom";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { useGithubUrl } from "@/hooks/useGithubUrl";
+import InputError from "@/components/ui/inputError";
 
 export function Pro() {
   const params = useParams();
@@ -38,16 +50,22 @@ export function Pro() {
       <div className="mx-10 md:mx-20 lg:mx-40">
         <div className="flex justify-center">
           <div className="md:block">
-            <ProfileAvatar
-              username={params.username || ""}
-              src=""
-              h={18}
-              w={18}
-            />
+            <div className="mb-3">
+              <ProfileAvatar
+                username={params.username || ""}
+                src=""
+                h={18}
+                w={18}
+              />
+            </div>
+
             <h3 className="text-pretty font-normal text-3xl text-center flex justify-center md:block">
               {params.username}
             </h3>
           </div>
+        </div>
+        <div>
+          <GithubUrl username={params.username || ""} />
         </div>
 
         <div>
@@ -57,6 +75,58 @@ export function Pro() {
 
       {/* <Outlet /> */}
     </>
+  );
+}
+
+function GithubUrl({ username }: { username: string }) {
+  const { errors, handleSubmit, setError, register, onSubmit } = useGithubUrl();
+  return (
+    <Dialog>
+      <DialogTrigger>{username}</DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Enter your github profile URL</DialogTitle>
+          <DialogDescription>
+            this url will be used to generate your profile
+          </DialogDescription>
+          <div>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="">
+                <div className="flex m-3">
+                  <Label htmlFor="githubUrl" className="mt-1">
+                    https://
+                  </Label>
+                  <input
+                    type="text"
+                    id="githubUrl"
+                    placeholder="github.com/drejt"
+                    className="w-full"
+                    {...register("githubUrl", {
+                      required: "please enter a url",
+                      minLength: {
+                        value: 12,
+                        message: "please enter a valid url",
+                      },
+                    })}
+                  />
+                </div>
+                <div className="p-0 m-0">
+                  <InputError message={errors.githubUrl?.message} />
+                </div>
+                <div>
+                  <Button type="submit" className="px-2">
+                    submit
+                  </Button>
+                </div>
+                <div className="flex justify-center">
+                  <InputError message={errors.root?.message} />
+                </div>
+              </div>
+            </form>
+          </div>
+        </DialogHeader>
+      </DialogContent>
+    </Dialog>
   );
 }
 
