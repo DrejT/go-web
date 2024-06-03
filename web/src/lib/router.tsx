@@ -1,21 +1,13 @@
-import {
-  Outlet,
-  useParams,
-  BrowserRouter,
-  Routes,
-  Route,
-} from "react-router-dom";
+import { Outlet, BrowserRouter, Routes, Route } from "react-router-dom";
 import Landing from "@/pages/landing";
 import { LandingLayout } from "@/layouts/landing";
 import Root from "@/layouts/root";
-import { useAuth } from "./../hooks/useAuth";
-import { useEffect, useState } from "react";
 import RegisterFormLayout from "@/layouts/register";
 import LoginPage from "@/pages/login";
 import RegisterPage from "@/pages/register";
 import SearchPage from "@/pages/search";
-import axios from "axios";
-import { API_URL } from "./utils";
+import { Pro } from "@/pages/profile";
+import { ProfileLayout } from "@/layouts/profile";
 
 export function Router() {
   return (
@@ -47,53 +39,18 @@ export function Router() {
               }
             />
             <Route path="search" element={<SearchPage />} />
-            <Route path=":username" element={<Pro />} />
+            <Route
+              element={
+                <ProfileLayout>
+                  <Outlet />
+                </ProfileLayout>
+              }
+            />
+            <Route index path=":username" element={<Pro />} />
           </Route>
         </Route>
       </Routes>
     </BrowserRouter>
-  );
-}
-
-function Pro() {
-  const params = useParams();
-  const { isLoggedIn, username } = useAuth();
-  const [data, setData] = useState<boolean>(false);
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const res = await axios.post(
-          API_URL + "user/",
-          { username: params.username },
-          { withCredentials: true }
-        );
-        console.log(res);
-        // setData(res);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    if (!data) {
-      fetchData();
-      setData(!data);
-    }
-  });
-  // const u = JSON.parse(user);
-  if (isLoggedIn && username === params.username) {
-    return (
-      <>
-        welcome back
-        <br />
-        {params.username}
-        <Outlet />
-      </>
-    );
-  }
-  return (
-    <>
-      welcome guest <br />
-      profile
-    </>
   );
 }
 

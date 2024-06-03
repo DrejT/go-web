@@ -30,16 +30,13 @@ export default function useLoginForm() {
         const responseData = res.data as FormResponse;
         console.log(responseData, res);
         setIsLoggedIn(true);
-        setUsername(responseData.username);
-        navigate("/" + responseData.username);
+        setUsername(responseData.data.username);
+        navigate("/" + responseData.data.username);
+        navigate(0);
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
         setError("root", error?.response?.data?.error);
-        // console.error(
-        //   "Server responded with an error:",
-        //   error?.response?.data?.error
-        // );
       }
     }
   }
