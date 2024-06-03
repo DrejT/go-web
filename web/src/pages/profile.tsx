@@ -19,6 +19,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useGithubUrl } from "@/hooks/useGithubUrl";
 import InputError from "@/components/ui/inputError";
+import { Edit } from "lucide-react";
 
 export function Pro() {
   const params = useParams();
@@ -59,13 +60,19 @@ export function Pro() {
               />
             </div>
 
-            <h3 className="text-pretty font-normal text-3xl text-center flex justify-center md:block">
-              {params.username}
-            </h3>
+            <div className="flex justify-center pl-4">
+              <h3 className="text-pretty font-normal text-3xl text-center flex justify-center md:block">
+                {params.username}
+              </h3>
+              {params.username === username ? (
+                <div>
+                  <GithubUrl />
+                </div>
+              ) : (
+                <></>
+              )}
+            </div>
           </div>
-        </div>
-        <div>
-          <GithubUrl username={params.username || ""} />
         </div>
 
         <div>
@@ -78,11 +85,13 @@ export function Pro() {
   );
 }
 
-function GithubUrl({ username }: { username: string }) {
-  const { errors, handleSubmit, setError, register, onSubmit } = useGithubUrl();
+function GithubUrl() {
+  const { errors, handleSubmit, register, onSubmit } = useGithubUrl();
   return (
     <Dialog>
-      <DialogTrigger>{username}</DialogTrigger>
+      <DialogTrigger>
+        <Edit />
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Enter your github profile URL</DialogTitle>
