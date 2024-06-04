@@ -1,8 +1,8 @@
 package api
 
 import (
-	"github.com/drejt/api/controllers"
-	"github.com/drejt/api/middlewares"
+	"github.com/drejt/api/internal/controllers"
+	"github.com/drejt/api/internal/middlewares"
 	"github.com/gin-gonic/gin"
 )
 

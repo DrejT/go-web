@@ -1,0 +1,12 @@
+version: "2"
+sql:
+  - engine: "postgresql"
+    queries: "./pg/query.sql"
+    schema: "./pg/schema.sql"
+    database:
+      uri: postgresql://postgres:${PG_PASSWORD}@localhost:5432/my_db
+    gen:
+      go:
+        package: "models"
+        out: "api/internal/models"
+        sql_package: "pgx/v5"

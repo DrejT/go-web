@@ -2,8 +2,11 @@ package controllers
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
+	"github.com/drejt/api/internal/db"
+	"github.com/drejt/api/internal/models"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
@@ -37,6 +40,7 @@ type RegisterRequest struct {
 	Email    string `json:"email" binding:"required"`
 }
 
+// register a new user
 func RegisterAuth(c *gin.Context) {
 	var registerReq RegisterRequest
 	if err := c.ShouldBindJSON(&registerReq); err != nil {
@@ -45,12 +49,25 @@ func RegisterAuth(c *gin.Context) {
 		})
 		return
 	}
+	newUser := models.CreateUserParams{Username: registerReq.Username, Email: registerReq.Email}
+	q, ctx := db.GetDbConn()
+	user, err := q.CreateUser(*ctx, newUser)
+	fmt.Println(newUser, user, err)
+	if err != nil {
+		log.Fatalln("there was an internal server error", err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "there was an internal server error",
+		})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"message": "registration successful",
-		"data":    registerReq,
+		"data":    user,
 	})
 }
 
+// check if a session exists using the requests session object
+// if session has expired return a message requesting a relogin
 func RevalidateSession(c *gin.Context) {
 	session := sessions.Default(c)
 	u := session.Get("username")
