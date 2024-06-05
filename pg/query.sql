@@ -13,8 +13,8 @@ VALUES ($1, $2, $3)
 RETURNING *;
 -- name: UpdateUser :exec
 UPDATE users
-SET username = $2
-WHERE id = $1;
+SET email = $2
+WHERE username = $1;
 -- name: DeleteUser :exec
 DELETE FROM users
 WHERE id = $1;

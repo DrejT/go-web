@@ -17,6 +17,7 @@ type LoginRequest struct {
 	Password string `json:"password" binding:"required"`
 }
 
+// handles login request coming from guest users
 func LoginAuth(c *gin.Context) {
 	var loginReq LoginRequest
 	if err := c.ShouldBindJSON(&loginReq); err != nil {
