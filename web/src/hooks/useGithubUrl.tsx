@@ -22,7 +22,9 @@ export function useGithubUrl() {
       );
       console.log(res);
     } catch (error) {
-      console.log(error);
+      if (axios.isAxiosError(error)) {
+        setError("root", { message: error?.response?.data.error });
+      }
     }
   }
   return {

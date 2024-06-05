@@ -36,7 +36,7 @@ func LoginAuth(c *gin.Context) {
 	// compare passwords
 	match := lib.DoPasswordsMatch(user.PassHash, loginReq.Password)
 	if !match {
-		c.JSON(http.StatusConflict, gin.H{"message": "sorry the password provided is invalid"})
+		c.JSON(http.StatusConflict, gin.H{"error": "sorry the password provided is invalid"})
 		return
 	}
 
@@ -71,6 +71,17 @@ func RegisterAuth(c *gin.Context) {
 		return
 	}
 
+	q, ctx := db.GetDbConn()
+	// check for an existing user with the same username or emails
+	if existingUser, err := q.GetUser(*ctx, registerReq.Username); existingUser.Username == registerReq.Username || existingUser.Email == registerReq.Email {
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "we are facing some issues right now please try again later"})
+			return
+		}
+		c.JSON(http.StatusConflict, gin.H{"error": "this username is already taken"})
+		return
+	}
+
 	// now hashing password
 	passHash, err := lib.HashPassword(registerReq.Password)
 	if err != nil {
@@ -82,7 +93,6 @@ func RegisterAuth(c *gin.Context) {
 
 	// creating new user
 	newUser := models.CreateUserParams{Username: registerReq.Username, Email: registerReq.Email, PassHash: passHash}
-	q, ctx := db.GetDbConn()
 	user, err := q.CreateUser(*ctx, newUser)
 	fmt.Println(newUser, user, err)
 	if err != nil {
@@ -108,7 +118,7 @@ func RevalidateSession(c *gin.Context) {
 	fmt.Println(u)
 	if u == nil {
 		c.JSON(http.StatusUnauthorized, gin.H{
-			"message": "please login",
+			"error": "please login",
 		})
 		return
 	}

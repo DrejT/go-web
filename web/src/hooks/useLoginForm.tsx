@@ -20,12 +20,13 @@ export default function useLoginForm() {
   const navigate = useNavigate();
   const { setIsLoggedIn, setUsername } = useAuth();
   async function onSubmit(data: FormValues) {
+    let res;
     try {
-      console.log(data);
-      const res = await axios.post(API_URL + "auth/login", data, {
+      // console.log(data);
+      res = await axios.post(API_URL + "auth/login", data, {
         withCredentials: true,
       });
-      // console.log(res);
+      console.log(res.status);
       if (res.status === 200) {
         const responseData = res.data as FormResponse;
         console.log(responseData, res);
@@ -35,8 +36,10 @@ export default function useLoginForm() {
         navigate(0);
       }
     } catch (error) {
+      console.error(error);
       if (axios.isAxiosError(error)) {
-        setError("root", error?.response?.data?.error);
+        console.log("setting error");
+        setError("root", { message: error?.response?.data.error });
       }
     }
   }

@@ -8,13 +8,14 @@ export function useAuth() {
   useEffect(() => {
     try {
       (async function () {
-        const res = await axios.get(API_URL + "auth/session", {
-          withCredentials: true,
-        });
-        if (res.status === 200) {
+        const res = await axios
+          .get(API_URL + "auth/session", {
+            withCredentials: true,
+          })
+          .catch((error) => console.error(error));
+        if (res?.status === 200) {
           setIsLoggedIn(true);
-          console.log(res);
-          setUsername(res.data.username);
+          setUsername(res?.data?.username);
         }
       })();
     } catch (error) {

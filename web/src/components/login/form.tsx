@@ -7,6 +7,7 @@ import InputError from "../ui/inputError";
 
 export function LoginForm() {
   const { handleSubmit, onSubmit, register, errors } = useLoginForm();
+  console.log(errors);
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="">

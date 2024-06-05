@@ -1,4 +1,5 @@
-import { postData } from "@/lib/fetch";
+import { API_URL } from "@/lib/utils";
+import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
@@ -20,20 +21,22 @@ export default function useRegisterForm() {
     try {
       const { username, email, password } = data;
       console.log(data);
-      const res = await postData("auth/register", {
-        username,
-        email,
-        password,
-      }).then((res) => {
-        const code = res.status;
-        if (code === 200) {
-          navigate("/login");
-        }
-        return res.json();
-      });
-      setError("root", res.error);
+      const res = await axios.post(
+        API_URL + "auth/register",
+        {
+          username,
+          email,
+          password,
+        },
+        { withCredentials: true }
+      );
+      if (res.status === 200) {
+        navigate("/login");
+      }
     } catch (error) {
-      console.log(error);
+      if (axios.isAxiosError(error)) {
+        setError("root", { message: error?.response?.data.error });
+      }
     }
   }
   return { register, errors, handleSubmit, onSubmit };
