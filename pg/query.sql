@@ -1,7 +1,12 @@
 -- name: GetUser :one
 SELECT *
 FROM users
+WHERE username = $1;
+-- name: GetUsers :one
+SELECT *
+FROM users
 WHERE username = $1
+    OR email = $2
 LIMIT 1;
 -- name: ListUsers :many
 SELECT *

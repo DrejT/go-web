@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
@@ -73,12 +72,15 @@ func RegisterAuth(c *gin.Context) {
 
 	q, ctx := db.GetDbConn()
 	// check for an existing user with the same username or emails
-	if existingUser, err := q.GetUser(*ctx, registerReq.Username); existingUser.Username == registerReq.Username || existingUser.Email == registerReq.Email {
-		if err != nil {
+	if existingUser, err := q.GetUsers(*ctx, models.GetUsersParams{Username: registerReq.Username, Email: registerReq.Email}); err != nil {
+		// handle the case where unique username and email are sent and no user is returned hence err is not nil
+		if err.Error() != "no rows in result set" {
+			log.Fatal("errro is ", err.Error())
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "we are facing some issues right now please try again later"})
 			return
 		}
-		c.JSON(http.StatusConflict, gin.H{"error": "this username is already taken"})
+	} else if existingUser.Username == registerReq.Username || existingUser.Email == registerReq.Email {
+		c.JSON(http.StatusConflict, gin.H{"error": "this username/email is already taken"})
 		return
 	}
 
@@ -94,7 +96,6 @@ func RegisterAuth(c *gin.Context) {
 	// creating new user
 	newUser := models.CreateUserParams{Username: registerReq.Username, Email: registerReq.Email, PassHash: passHash}
 	user, err := q.CreateUser(*ctx, newUser)
-	fmt.Println(newUser, user, err)
 	if err != nil {
 		log.Fatalln("there was an internal server error", err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -115,7 +116,6 @@ func RegisterAuth(c *gin.Context) {
 func RevalidateSession(c *gin.Context) {
 	session := sessions.Default(c)
 	u := session.Get("username")
-	fmt.Println(u)
 	if u == nil {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"error": "please login",

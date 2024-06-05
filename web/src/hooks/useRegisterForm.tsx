@@ -35,7 +35,11 @@ export default function useRegisterForm() {
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        setError("root", { message: error?.response?.data.error });
+        setError("root", {
+          message:
+            error?.response?.data.error ||
+            "server down.\n please try again later",
+        });
       }
     }
   }

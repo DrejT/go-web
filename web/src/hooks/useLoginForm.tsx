@@ -39,7 +39,11 @@ export default function useLoginForm() {
       console.error(error);
       if (axios.isAxiosError(error)) {
         console.log("setting error");
-        setError("root", { message: error?.response?.data.error });
+        setError("root", {
+          message:
+            error?.response?.data.error ||
+            "server down.\n please try again later",
+        });
       }
     }
   }

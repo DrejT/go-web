@@ -49,11 +49,37 @@ const getUser = `-- name: GetUser :one
 SELECT id, username, email, on_boarding, pass_hash, github_url
 FROM users
 WHERE username = $1
-LIMIT 1
 `
 
 func (q *Queries) GetUser(ctx context.Context, username string) (User, error) {
 	row := q.db.QueryRow(ctx, getUser, username)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.Username,
+		&i.Email,
+		&i.OnBoarding,
+		&i.PassHash,
+		&i.GithubUrl,
+	)
+	return i, err
+}
+
+const getUsers = `-- name: GetUsers :one
+SELECT id, username, email, on_boarding, pass_hash, github_url
+FROM users
+WHERE username = $1
+    OR email = $2
+LIMIT 1
+`
+
+type GetUsersParams struct {
+	Username string
+	Email    string
+}
+
+func (q *Queries) GetUsers(ctx context.Context, arg GetUsersParams) (User, error) {
+	row := q.db.QueryRow(ctx, getUsers, arg.Username, arg.Email)
 	var i User
 	err := row.Scan(
 		&i.ID,
