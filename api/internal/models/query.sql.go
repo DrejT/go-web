@@ -10,20 +10,28 @@ import (
 )
 
 const createUser = `-- name: CreateUser :one
-INSERT INTO users (username, email)
-VALUES ($1, $2)
-RETURNING id, username, email
+INSERT INTO users (username, email, pass_hash)
+VALUES ($1, $2, $3)
+RETURNING id, username, email, on_boarding, pass_hash, github_url
 `
 
 type CreateUserParams struct {
 	Username string
 	Email    string
+	PassHash string
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
-	row := q.db.QueryRow(ctx, createUser, arg.Username, arg.Email)
+	row := q.db.QueryRow(ctx, createUser, arg.Username, arg.Email, arg.PassHash)
 	var i User
-	err := row.Scan(&i.ID, &i.Username, &i.Email)
+	err := row.Scan(
+		&i.ID,
+		&i.Username,
+		&i.Email,
+		&i.OnBoarding,
+		&i.PassHash,
+		&i.GithubUrl,
+	)
 	return i, err
 }
 
@@ -38,21 +46,28 @@ func (q *Queries) DeleteUser(ctx context.Context, id int64) error {
 }
 
 const getUser = `-- name: GetUser :one
-SELECT id, username, email
+SELECT id, username, email, on_boarding, pass_hash, github_url
 FROM users
-WHERE id = $1
+WHERE username = $1
 LIMIT 1
 `
 
-func (q *Queries) GetUser(ctx context.Context, id int64) (User, error) {
-	row := q.db.QueryRow(ctx, getUser, id)
+func (q *Queries) GetUser(ctx context.Context, username string) (User, error) {
+	row := q.db.QueryRow(ctx, getUser, username)
 	var i User
-	err := row.Scan(&i.ID, &i.Username, &i.Email)
+	err := row.Scan(
+		&i.ID,
+		&i.Username,
+		&i.Email,
+		&i.OnBoarding,
+		&i.PassHash,
+		&i.GithubUrl,
+	)
 	return i, err
 }
 
 const listUsers = `-- name: ListUsers :many
-SELECT id, username, email
+SELECT id, username, email, on_boarding, pass_hash, github_url
 FROM users
 ORDER BY username
 `
@@ -66,7 +81,14 @@ func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
 	var items []User
 	for rows.Next() {
 		var i User
-		if err := rows.Scan(&i.ID, &i.Username, &i.Email); err != nil {
+		if err := rows.Scan(
+			&i.ID,
+			&i.Username,
+			&i.Email,
+			&i.OnBoarding,
+			&i.PassHash,
+			&i.GithubUrl,
+		); err != nil {
 			return nil, err
 		}
 		items = append(items, i)

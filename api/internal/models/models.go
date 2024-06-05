@@ -4,8 +4,15 @@
 
 package models
 
+import (
+	"github.com/jackc/pgx/v5/pgtype"
+)
+
 type User struct {
-	ID       int64
-	Username string
-	Email    string
+	ID         int64
+	Username   string
+	Email      string
+	OnBoarding pgtype.Bool
+	PassHash   string
+	GithubUrl  pgtype.Text
 }

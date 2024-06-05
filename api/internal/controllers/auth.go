@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/drejt/api/internal/db"
+	"github.com/drejt/api/internal/lib"
 	"github.com/drejt/api/internal/models"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -19,15 +20,34 @@ type LoginRequest struct {
 func LoginAuth(c *gin.Context) {
 	var loginReq LoginRequest
 	if err := c.ShouldBindJSON(&loginReq); err != nil {
-		c.JSON(400, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
+	// fetch stored user from db
+	q, ctx := db.GetDbConn()
+	user, err := q.GetUser(*ctx, loginReq.Username)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "user not found"})
+		return
+	}
+
+	// compare passwords
+	match := lib.DoPasswordsMatch(user.PassHash, loginReq.Password)
+	if !match {
+		c.JSON(http.StatusConflict, gin.H{"message": "sorry the password provided is invalid"})
+		return
+	}
+
+	// start a new session
 	session := sessions.Default(c)
 	session.Set("username", loginReq.Username)
 	if err := session.Save(); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save session"})
 		return
 	}
+
+	// send a successful login response
 	c.JSON(200, gin.H{
 		"message": "Login successful",
 		"data":    loginReq,
@@ -49,7 +69,18 @@ func RegisterAuth(c *gin.Context) {
 		})
 		return
 	}
-	newUser := models.CreateUserParams{Username: registerReq.Username, Email: registerReq.Email}
+
+	// now hashing password
+	passHash, err := lib.HashPassword(registerReq.Password)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "there was an internal error",
+		})
+		return
+	}
+
+	// creating new user
+	newUser := models.CreateUserParams{Username: registerReq.Username, Email: registerReq.Email, PassHash: passHash}
 	q, ctx := db.GetDbConn()
 	user, err := q.CreateUser(*ctx, newUser)
 	fmt.Println(newUser, user, err)
@@ -60,6 +91,8 @@ func RegisterAuth(c *gin.Context) {
 		})
 		return
 	}
+
+	// sending data
 	c.JSON(http.StatusOK, gin.H{
 		"message": "registration successful",
 		"data":    user,
