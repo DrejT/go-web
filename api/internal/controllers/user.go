@@ -1,7 +1,9 @@
 package controllers
 
 import (
-	"github.com/gin-contrib/sessions"
+	"net/http"
+
+	"github.com/drejt/api/internal/db"
 	"github.com/gin-gonic/gin"
 )
 
@@ -10,14 +12,22 @@ type UserRequest struct {
 }
 
 func GetUserByUsername(c *gin.Context) {
-	var user UserRequest
-	if err := c.ShouldBindJSON(&user); err != nil {
+	var u UserRequest
+	if err := c.ShouldBindJSON(&u); err != nil {
 		c.JSON(400, gin.H{
 			"error": err.Error(),
 		})
 		return
 	}
-	session := sessions.Default(c)
-	username := session.Get("username")
-	c.JSON(200, gin.H{"message": "successfully fetched user", "data": username})
+
+	// init db conn
+	q, ctx := db.GetDbConn()
+	user, err := q.GetUser(*ctx, u.Username)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "there was an error"})
+		return
+	}
+	user.PassHash = ""
+
+	c.JSON(200, gin.H{"message": "successfully fetched user", "data": user})
 }

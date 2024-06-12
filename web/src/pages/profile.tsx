@@ -11,10 +11,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { API_URL } from "@/lib/utils";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import {
-  // Outlet,
-  useParams,
-} from "react-router-dom";
+import { Outlet, useParams } from "react-router-dom";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useGithubUrl } from "@/hooks/useGithubUrl";
@@ -23,7 +20,7 @@ import { Edit } from "lucide-react";
 
 export function Pro() {
   const params = useParams();
-  const { isLoggedIn, username } = useAuth();
+  const { isLoggedIn, username, onboard } = useAuth();
   const [data, setData] = useState<boolean>(false);
   useEffect(() => {
     async function fetchData() {
@@ -49,39 +46,52 @@ export function Pro() {
   return (
     <>
       <div className="mx-10 md:mx-20 lg:mx-40">
-        <div className="flex justify-center">
-          <div className="md:block">
-            <div className="mb-3">
-              <ProfileAvatar
-                username={params.username || ""}
-                src=""
-                h={18}
-                w={18}
-              />
+        {!onboard ? (
+          <Onboard />
+        ) : (
+          <div className="flex justify-center">
+            <div className="md:block">
+              <div className="mb-3">
+                <ProfileAvatar
+                  username={params.username || ""}
+                  src=""
+                  h={18}
+                  w={18}
+                />
+              </div>
+              <div>
+                <Outlet />
+              </div>
+
+              <div className="flex justify-center pl-4">
+                <h3 className="text-pretty font-normal text-3xl text-center flex justify-center md:block">
+                  {params.username}
+                </h3>
+                {params.username === username ? (
+                  <div>
+                    <GithubUrl />
+                  </div>
+                ) : (
+                  <></>
+                )}
+              </div>
             </div>
 
-            <div className="flex justify-center pl-4">
-              <h3 className="text-pretty font-normal text-3xl text-center flex justify-center md:block">
-                {params.username}
-              </h3>
-              {params.username === username ? (
-                <div>
-                  <GithubUrl />
-                </div>
-              ) : (
-                <></>
-              )}
+            <div>
+              <Bio isLoggedIn={isLoggedIn} />
             </div>
           </div>
-        </div>
-
-        <div>
-          <Bio isLoggedIn={isLoggedIn} />
-        </div>
+        )}
       </div>
-
-      {/* <Outlet /> */}
     </>
+  );
+}
+
+function Onboard() {
+  return (
+    <div>
+      <form action="">enter details here</form>
+    </div>
   );
 }
 
@@ -140,7 +150,6 @@ function GithubUrl() {
 }
 
 function Bio({ isLoggedIn }: { isLoggedIn: boolean }) {
-  console.log(isLoggedIn);
   if (isLoggedIn === true) {
     return (
       <div>

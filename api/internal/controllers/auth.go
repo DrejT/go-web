@@ -115,12 +115,22 @@ func RegisterAuth(c *gin.Context) {
 // if session has expired return a message requesting a relogin
 func RevalidateSession(c *gin.Context) {
 	session := sessions.Default(c)
-	u := session.Get("username")
-	if u == nil {
+	username, ok := session.Get("username").(string)
+	if !ok || username == "" {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"error": "please login",
 		})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"message": "you are logged in", "username": u})
+
+	q, ctx := db.GetDbConn()
+	user, err := q.GetUser(*ctx, string(username))
+	if err != nil {
+		session.Set("username", "")
+		session.Save()
+		c.JSON(http.StatusNotFound, gin.H{"error": "user not found"})
+	}
+
+	user.PassHash = ""
+	c.JSON(http.StatusOK, gin.H{"message": "you are logged in", "user": user})
 }

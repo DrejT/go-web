@@ -45,8 +45,11 @@ export function Router() {
                   <Outlet />
                 </ProfileLayout>
               }
-            />
-            <Route index path=":username" element={<Pro />} />
+            >
+              <Route path=":username" element={<Pro />}>
+                <Route path="onboard" element={<div>onboarding</div>} />
+              </Route>
+            </Route>
           </Route>
         </Route>
       </Routes>

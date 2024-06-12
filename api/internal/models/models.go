@@ -9,10 +9,9 @@ import (
 )
 
 type User struct {
-	ID         int64
-	Username   string
-	Email      string
-	OnBoarding pgtype.Bool
-	PassHash   string
-	GithubUrl  pgtype.Text
+	ID       int64
+	Username string
+	Email    string
+	PassHash string
+	Onboard  pgtype.Bool
 }

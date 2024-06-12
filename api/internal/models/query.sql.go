@@ -12,7 +12,7 @@ import (
 const createUser = `-- name: CreateUser :one
 INSERT INTO users (username, email, pass_hash)
 VALUES ($1, $2, $3)
-RETURNING id, username, email, on_boarding, pass_hash, github_url
+RETURNING id, username, email, pass_hash, onboard
 `
 
 type CreateUserParams struct {
@@ -28,9 +28,8 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 		&i.ID,
 		&i.Username,
 		&i.Email,
-		&i.OnBoarding,
 		&i.PassHash,
-		&i.GithubUrl,
+		&i.Onboard,
 	)
 	return i, err
 }
@@ -46,7 +45,7 @@ func (q *Queries) DeleteUser(ctx context.Context, id int64) error {
 }
 
 const getUser = `-- name: GetUser :one
-SELECT id, username, email, on_boarding, pass_hash, github_url
+SELECT id, username, email, pass_hash, onboard
 FROM users
 WHERE username = $1
 `
@@ -58,15 +57,14 @@ func (q *Queries) GetUser(ctx context.Context, username string) (User, error) {
 		&i.ID,
 		&i.Username,
 		&i.Email,
-		&i.OnBoarding,
 		&i.PassHash,
-		&i.GithubUrl,
+		&i.Onboard,
 	)
 	return i, err
 }
 
 const getUsers = `-- name: GetUsers :one
-SELECT id, username, email, on_boarding, pass_hash, github_url
+SELECT id, username, email, pass_hash, onboard
 FROM users
 WHERE username = $1
     OR email = $2
@@ -85,15 +83,14 @@ func (q *Queries) GetUsers(ctx context.Context, arg GetUsersParams) (User, error
 		&i.ID,
 		&i.Username,
 		&i.Email,
-		&i.OnBoarding,
 		&i.PassHash,
-		&i.GithubUrl,
+		&i.Onboard,
 	)
 	return i, err
 }
 
 const listUsers = `-- name: ListUsers :many
-SELECT id, username, email, on_boarding, pass_hash, github_url
+SELECT id, username, email, pass_hash, onboard
 FROM users
 ORDER BY username
 `
@@ -111,9 +108,8 @@ func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
 			&i.ID,
 			&i.Username,
 			&i.Email,
-			&i.OnBoarding,
 			&i.PassHash,
-			&i.GithubUrl,
+			&i.Onboard,
 		); err != nil {
 			return nil, err
 		}
