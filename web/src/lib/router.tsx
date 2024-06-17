@@ -5,7 +5,7 @@ import Root from "@/layouts/root";
 import RegisterFormLayout from "@/layouts/register";
 import LoginPage from "@/pages/login";
 import RegisterPage from "@/pages/register";
-import SearchPage from "@/pages/search";
+// import SearchPage from "@/pages/search";
 import { Pro } from "@/pages/profile";
 import { ProfileLayout } from "@/layouts/profile";
 
@@ -38,7 +38,7 @@ export function Router() {
                 </RegisterFormLayout>
               }
             />
-            <Route path="search" element={<SearchPage />} />
+            {/* <Route path="search" element={<SearchPage />} /> */}
             <Route
               element={
                 <ProfileLayout>

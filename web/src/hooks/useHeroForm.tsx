@@ -1,18 +1,25 @@
-import { FormEvent, useState } from "react";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
+interface FormValues {
+  searchTerm: string;
+}
+
 export function useHeroForm() {
-  const [role, setRole] = useState<String>("");
+  const {
+    handleSubmit,
+    formState: { errors },
+    setError,
+    register,
+  } = useForm<FormValues>();
   const navigate = useNavigate();
-  async function handleSubmit(e: FormEvent) {
-    e.preventDefault();
-    // const form = new FormData(e.currentTarget);
-    // console.log(form.get("role"));
-    navigate("/search?role=" + role);
+  async function onSubmit(data: FormValues) {
     try {
+      navigate("/search?role=" + data.searchTerm);
+      console.log(data);
     } catch (error) {
       console.log(error);
     }
   }
-  return { role, setRole, handleSubmit };
+  return { handleSubmit, errors, setError, register, onSubmit };
 }

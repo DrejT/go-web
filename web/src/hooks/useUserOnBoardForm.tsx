@@ -1,4 +1,7 @@
+import { API_URL } from "@/lib/utils";
 import { useForm } from "react-hook-form";
+import { useAuth } from "./useAuth";
+import axios from "axios";
 
 interface FormValues {
   universityName: string;
@@ -13,14 +16,26 @@ export default function useUserOnBoardForm() {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<FormValues>();
+  const { username } = useAuth();
   async function onSubmit(data: FormValues) {
     try {
-      // todo create a post request and create an api endpoint
-      // to store the formdata and update on_board to true
       console.log(data);
+      const res = await axios.post(API_URL + "user/onboard", {
+        username,
+        ...data,
+      });
+      console.log(res);
     } catch (error) {
       console.error(error);
+      if (axios.isAxiosError(error)) {
+        setError("root", {
+          message:
+            error?.response?.data.error ||
+            "server down.\n please try again later",
+        });
+      }
     }
   }
   return {

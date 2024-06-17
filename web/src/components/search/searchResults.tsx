@@ -26,7 +26,7 @@ export function SearchResults({ role }: { role: string }) {
       fetchData();
       setStatus(false);
     }
-  }, [data, status]);
+  }, [data, status, setData, setStatus, role]);
   return (
     <div className="md:flex justify-between">
       <div className="md:">categories</div>

@@ -71,83 +71,90 @@ export function Pro() {
 function Onboard({ userType }: { userType: string }) {
   console.log(userType);
   if (userType === "org") {
-    const { register, errors, handleSubmit, onSubmit } = useOrgOnBoardForm();
-    return (
-      <div>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div>
-            <h3 className="font-extrabold text-3xl text-center">
-              {" "}
-              Lets get you on board
-            </h3>
-          </div>
-          <div>
-            <div className="mb-1">
-              <div className="mb-3">
-                <Label className="">Organisation Name</Label>
-                <Input
-                  {...register("organisationName", {
-                    required: "organisation name is required",
-                  })}
-                  type="text"
-                  placeholder="Facebook Inc"
-                />
-                <InputError message={errors.organisationName?.message} />
-              </div>
-              <div className="mb-3">
-                <Label className="">Address</Label>
-                <Input
-                  {...register("address", {
-                    required: "Address is required",
-                  })}
-                  type="text"
-                  placeholder="stardew alley"
-                />
-                <InputError message={errors.address?.message} />
-              </div>
-              <div className="mb-3">
-                <Label className="">pincode</Label>
-                <Input
-                  {...register("pincode", {
-                    required: "pincode is required",
-                  })}
-                  type="number"
-                  placeholder="123456"
-                />
-                <InputError message={errors.pincode?.message} />
-              </div>
-              <div className="mb-3">
-                <Label className="">employee count</Label>
-                <Input
-                  {...register("employeeCount", {
-                    required: "employee count is required",
-                  })}
-                  type="number"
-                  placeholder="5"
-                />
-                <InputError message={errors.employeeCount?.message} />
-              </div>
-              <div className="mb-3">
-                <Label className="">
-                  website Url <em>(optional)</em>
-                </Label>
-                <Input
-                  {...register("websiteUrl")}
-                  type="text"
-                  placeholder="facebook.com"
-                />
-                <InputError message={errors.websiteUrl?.message} />
-              </div>
-            </div>
-            <div className="flex justify-center">
-              <Button type="submit">submit</Button>
-            </div>
-          </div>
-        </form>
-      </div>
-    );
+    return <OrgOnBoardForm />;
   }
   return <UserOnBoardForm />;
+}
+
+function OrgOnBoardForm() {
+  const { register, errors, handleSubmit, onSubmit } = useOrgOnBoardForm();
+  return (
+    <div>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div>
+          <h3 className="font-extrabold text-3xl text-center">
+            {" "}
+            Lets get you on board
+          </h3>
+        </div>
+        <div>
+          <div className="mb-1">
+            <div className="mb-3">
+              <Label className="">Organisation Name</Label>
+              <Input
+                {...register("orgName", {
+                  required: "organisation name is required",
+                })}
+                type="text"
+                placeholder="Facebook Inc"
+              />
+              <InputError message={errors.orgName?.message} />
+            </div>
+            <div className="mb-3">
+              <Label className="">Address</Label>
+              <Input
+                {...register("address", {
+                  required: "Address is required",
+                })}
+                type="text"
+                placeholder="stardew alley"
+              />
+              <InputError message={errors.address?.message} />
+            </div>
+            <div className="mb-3">
+              <Label className="">pincode</Label>
+              <Input
+                {...register("pincode", {
+                  required: "pincode is required",
+                })}
+                type="number"
+                placeholder="123456"
+              />
+              <InputError message={errors.pincode?.message} />
+            </div>
+            <div className="mb-3">
+              <Label className="">employee count</Label>
+              <Input
+                {...register("employeeCount", {
+                  required: "employee count is required",
+                })}
+                type="number"
+                placeholder="5"
+              />
+              <InputError message={errors.employeeCount?.message} />
+            </div>
+            <div className="mb-3">
+              <Label className="">
+                website Url <em>(optional)</em>
+              </Label>
+              <Input
+                {...register("websiteUrl")}
+                type="text"
+                placeholder="facebook.com"
+              />
+              <InputError message={errors.websiteUrl?.message} />
+            </div>
+          </div>
+          <div className="block">
+            <div>
+              <InputError message={errors?.root?.message} />
+            </div>
+            <Button type="submit">submit</Button>
+          </div>
+        </div>
+      </form>
+    </div>
+  );
 }
 
 function UserOnBoardForm() {
@@ -219,7 +226,10 @@ function UserOnBoardForm() {
               <InputError message={errors.websiteUrl?.message} />
             </div>
           </div>
-          <div className="flex justify-center">
+          <div className="block">
+            <div>
+              <InputError message={errors?.root?.message} />
+            </div>
             <Button type="submit">submit</Button>
           </div>
         </div>

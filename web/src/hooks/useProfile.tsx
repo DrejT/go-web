@@ -25,6 +25,6 @@ export default function useProfile() {
       fetchData();
       setData(!data);
     }
-  });
+  }, [setData, data, params.username]);
   return { data, params };
 }

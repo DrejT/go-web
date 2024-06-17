@@ -8,11 +8,37 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+type FullName struct {
+	ID        int64
+	FirstName string
+	LastName  string
+}
+
+type OrgDetail struct {
+	ID            int64
+	OrgName       string
+	OrgAddress    string
+	Pincode       int32
+	EmployeeCount int32
+	WebsiteUrl    string
+}
+
 type User struct {
-	ID       int64
-	Username string
-	Email    string
-	PassHash string
-	OnBoard  pgtype.Bool
-	UserType string
+	ID            int64
+	Username      string
+	Email         string
+	PassHash      string
+	OnBoard       pgtype.Bool
+	UserType      string
+	UserDetailsID int64
+	OrgDetailsID  int64
+}
+
+type UserDetail struct {
+	ID             int64
+	CollegeName    string
+	Education      string
+	GithubUrl      string
+	UniversityName string
+	WebsiteUrl     string
 }

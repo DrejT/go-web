@@ -90,6 +90,10 @@ func RegisterAuth(c *gin.Context) {
 		return
 	}
 
+	// handle creation of new user details to default values
+	userDetails := lib.GetDefaultUserDetails(c, q, ctx)
+	orgDetails := lib.GetDefaultOrgDetails(c, q, ctx)
+
 	// now hashing password
 	passHash, err := lib.HashPassword(registerReq.Password)
 	if err != nil {
@@ -100,7 +104,7 @@ func RegisterAuth(c *gin.Context) {
 	}
 
 	// creating new user
-	newUser := models.CreateUserParams{Username: registerReq.Username, Email: registerReq.Email, PassHash: passHash, UserType: registerReq.UserType}
+	newUser := models.CreateUserParams{Username: registerReq.Username, Email: registerReq.Email, PassHash: passHash, UserType: registerReq.UserType, OrgDetailsID: orgDetails.ID, UserDetailsID: userDetails.ID}
 	user, err := q.CreateUser(*ctx, newUser)
 	if err != nil {
 		log.Fatalln("there was an internal server error", err.Error())

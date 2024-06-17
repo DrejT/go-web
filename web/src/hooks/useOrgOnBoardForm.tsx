@@ -1,10 +1,13 @@
+import { API_URL } from "@/lib/utils";
+import axios from "axios";
 import { useForm } from "react-hook-form";
+import { useAuth } from "./useAuth";
 
 interface FormValues {
-  organisationName: string;
+  orgName: string;
   address: string;
-  pincode: number;
-  employeeCount: number;
+  pincode: string;
+  employeeCount: string;
   websiteUrl: string;
 }
 
@@ -15,11 +18,26 @@ export default function useOrgOnBoardForm() {
     formState: { errors },
     setError,
   } = useForm<FormValues>();
+  const { username } = useAuth();
   async function onSubmit(data: FormValues) {
     try {
       console.log(data);
+      const res = await axios.post(API_URL + "org/onboard", {
+        username,
+        ...data,
+        employeeCount: parseInt(data.employeeCount, 10),
+        pincode: parseInt(data.pincode, 10),
+      });
+      console.log(res);
     } catch (error) {
       console.error(error);
+      if (axios.isAxiosError(error)) {
+        setError("root", {
+          message:
+            error?.response?.data.error ||
+            "server down.\n please try again later",
+        });
+      }
     }
   }
   return {

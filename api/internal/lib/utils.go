@@ -1,6 +1,11 @@
 package lib
 
 import (
+	"context"
+	"net/http"
+
+	"github.com/drejt/api/internal/models"
+	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -22,4 +27,22 @@ func DoPasswordsMatch(hashedPassword, currPassword string) bool {
 	err := bcrypt.CompareHashAndPassword(
 		[]byte(hashedPassword), []byte(currPassword))
 	return err == nil
+}
+
+func GetDefaultUserDetails(c *gin.Context, q *models.Queries, ctx *context.Context) models.UserDetail {
+	newUserDetails := models.CreateUserDetailsParams{CollegeName: "", UniversityName: "", WebsiteUrl: "", GithubUrl: "", Education: ""}
+	details, err := q.CreateUserDetails(*ctx, newUserDetails)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "there was an internal error"})
+	}
+	return details
+}
+
+func GetDefaultOrgDetails(c *gin.Context, q *models.Queries, ctx *context.Context) models.OrgDetail {
+	newOrgDetails := models.CreateOrgDetailsParams{Pincode: 000000, OrgAddress: "", WebsiteUrl: "", OrgName: "", EmployeeCount: 1}
+	details, err := q.CreateOrgDetails(*ctx, newOrgDetails)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "there was an internal error"})
+	}
+	return details
 }
