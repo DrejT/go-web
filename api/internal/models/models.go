@@ -13,5 +13,6 @@ type User struct {
 	Username string
 	Email    string
 	PassHash string
-	Onboard  pgtype.Bool
+	OnBoard  pgtype.Bool
+	UserType string
 }

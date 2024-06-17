@@ -58,6 +58,7 @@ type RegisterRequest struct {
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
 	Email    string `json:"email" binding:"required"`
+	UserType string `json:"usertype"`
 }
 
 // register a new user
@@ -68,6 +69,11 @@ func RegisterAuth(c *gin.Context) {
 			"error": err.Error(),
 		})
 		return
+	}
+
+	// only org and user types are valid userTypes
+	if registerReq.UserType != "org" && registerReq.UserType != "user" {
+		registerReq.UserType = "user"
 	}
 
 	q, ctx := db.GetDbConn()
@@ -94,7 +100,7 @@ func RegisterAuth(c *gin.Context) {
 	}
 
 	// creating new user
-	newUser := models.CreateUserParams{Username: registerReq.Username, Email: registerReq.Email, PassHash: passHash}
+	newUser := models.CreateUserParams{Username: registerReq.Username, Email: registerReq.Email, PassHash: passHash, UserType: registerReq.UserType}
 	user, err := q.CreateUser(*ctx, newUser)
 	if err != nil {
 		log.Fatalln("there was an internal server error", err.Error())
@@ -127,8 +133,13 @@ func RevalidateSession(c *gin.Context) {
 	user, err := q.GetUser(*ctx, string(username))
 	if err != nil {
 		session.Set("username", "")
-		session.Save()
+		err := session.Save()
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "internal error please try again"})
+			return
+		}
 		c.JSON(http.StatusNotFound, gin.H{"error": "user not found"})
+		return
 	}
 
 	user.PassHash = ""

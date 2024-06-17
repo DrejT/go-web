@@ -10,26 +10,33 @@ import (
 )
 
 const createUser = `-- name: CreateUser :one
-INSERT INTO users (username, email, pass_hash)
-VALUES ($1, $2, $3)
-RETURNING id, username, email, pass_hash, onboard
+INSERT INTO users (username, email, pass_hash, user_type)
+VALUES ($1, $2, $3, $4)
+RETURNING id, username, email, pass_hash, on_board, user_type
 `
 
 type CreateUserParams struct {
 	Username string
 	Email    string
 	PassHash string
+	UserType string
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
-	row := q.db.QueryRow(ctx, createUser, arg.Username, arg.Email, arg.PassHash)
+	row := q.db.QueryRow(ctx, createUser,
+		arg.Username,
+		arg.Email,
+		arg.PassHash,
+		arg.UserType,
+	)
 	var i User
 	err := row.Scan(
 		&i.ID,
 		&i.Username,
 		&i.Email,
 		&i.PassHash,
-		&i.Onboard,
+		&i.OnBoard,
+		&i.UserType,
 	)
 	return i, err
 }
@@ -45,7 +52,7 @@ func (q *Queries) DeleteUser(ctx context.Context, id int64) error {
 }
 
 const getUser = `-- name: GetUser :one
-SELECT id, username, email, pass_hash, onboard
+SELECT id, username, email, pass_hash, on_board, user_type
 FROM users
 WHERE username = $1
 `
@@ -58,13 +65,14 @@ func (q *Queries) GetUser(ctx context.Context, username string) (User, error) {
 		&i.Username,
 		&i.Email,
 		&i.PassHash,
-		&i.Onboard,
+		&i.OnBoard,
+		&i.UserType,
 	)
 	return i, err
 }
 
 const getUsers = `-- name: GetUsers :one
-SELECT id, username, email, pass_hash, onboard
+SELECT id, username, email, pass_hash, on_board, user_type
 FROM users
 WHERE username = $1
     OR email = $2
@@ -84,13 +92,14 @@ func (q *Queries) GetUsers(ctx context.Context, arg GetUsersParams) (User, error
 		&i.Username,
 		&i.Email,
 		&i.PassHash,
-		&i.Onboard,
+		&i.OnBoard,
+		&i.UserType,
 	)
 	return i, err
 }
 
 const listUsers = `-- name: ListUsers :many
-SELECT id, username, email, pass_hash, onboard
+SELECT id, username, email, pass_hash, on_board, user_type
 FROM users
 ORDER BY username
 `
@@ -109,7 +118,8 @@ func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
 			&i.Username,
 			&i.Email,
 			&i.PassHash,
-			&i.Onboard,
+			&i.OnBoard,
+			&i.UserType,
 		); err != nil {
 			return nil, err
 		}

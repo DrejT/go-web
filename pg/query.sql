@@ -13,8 +13,8 @@ SELECT *
 FROM users
 ORDER BY username;
 -- name: CreateUser :one
-INSERT INTO users (username, email, pass_hash)
-VALUES ($1, $2, $3)
+INSERT INTO users (username, email, pass_hash, user_type)
+VALUES ($1, $2, $3, $4)
 RETURNING *;
 -- name: UpdateUser :exec
 UPDATE users

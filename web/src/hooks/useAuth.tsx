@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 
 export function useAuth() {
   const [username, setUsername] = useState<string>("");
-  const [onboard, setOnboard] = useState<string>("");
+  const [onboard, setOnboard] = useState<boolean>(false);
+  const [userType, setUserType] = useState<string>("user");
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   useEffect(() => {
     try {
@@ -18,7 +19,8 @@ export function useAuth() {
           console.log(res);
           setIsLoggedIn(true);
           setUsername(res.data.user.Username);
-          setOnboard(res.data.user.Onboard);
+          setOnboard(res.data.user.OnBoard);
+          setUserType(res.data.user.UserType);
         }
       })();
     } catch (error) {
@@ -26,5 +28,12 @@ export function useAuth() {
     }
   }, [isLoggedIn, username, onboard]);
   console.log(isLoggedIn, username, onboard);
-  return { username, isLoggedIn, setIsLoggedIn, setUsername, onboard };
+  return {
+    username,
+    isLoggedIn,
+    setIsLoggedIn,
+    setUsername,
+    onboard,
+    userType,
+  };
 }
