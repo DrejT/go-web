@@ -4,15 +4,20 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import useLoginForm from "@/hooks/useLoginForm";
 import InputError from "../ui/inputError";
+import useBusiness from "@/hooks/useBusiness";
 
 export function LoginForm() {
   const { handleSubmit, onSubmit, register, errors } = useLoginForm();
   console.log(errors);
+  const { userType, registerUrl, isBusiness } = useBusiness();
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="">
         <div className="flex justify-center">
-          <h3 className="md:text-2xl font-semibold">login</h3>
+          <h3 className="md:text-2xl font-semibold">
+            {isBusiness ? "Business " : ""}
+            Login
+          </h3>
         </div>
         <div className="mb-1">
           <div className="mb-3">
@@ -43,8 +48,11 @@ export function LoginForm() {
             <InputError message={errors.password?.message} />
           </div>
           <div>
+            <Input {...register("usertype")} value={userType} type="hidden" />
+          </div>
+          <div>
             <p className="text-sm">
-              <Link to={"/register"}>don't have an account?</Link>
+              <Link to={registerUrl}>don't have an account?</Link>
             </p>
           </div>
         </div>

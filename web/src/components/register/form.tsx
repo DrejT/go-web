@@ -4,14 +4,18 @@ import { Label } from "../ui/label";
 import { Button } from "../ui/button";
 import useRegisterForm from "@/hooks/useRegisterForm";
 import InputError from "../ui/inputError";
+import useBusiness from "@/hooks/useBusiness";
 
 export function RegisterForm() {
   const { errors, register, handleSubmit, onSubmit } = useRegisterForm();
+  const { isBusiness, loginUrl, userType } = useBusiness();
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="">
         <div className="flex justify-center">
-          <h3 className="md:text-2xl font-semibold">Register</h3>
+          <h3 className="md:text-2xl font-semibold">
+            {isBusiness ? "Business " : ""}Register
+          </h3>
         </div>
         <div className="mb-1">
           <div className="">
@@ -65,8 +69,11 @@ export function RegisterForm() {
             <InputError message={errors.password?.message} />
           </div>
           <div>
+            <Input {...register("usertype")} value={userType} type="hidden" />
+          </div>
+          <div>
             <p className="text-sm">
-              <Link to={"/login"}>already registered?</Link>
+              <Link to={loginUrl}>already registered?</Link>
             </p>
           </div>
         </div>

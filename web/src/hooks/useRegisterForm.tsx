@@ -7,6 +7,7 @@ interface FormValues {
   username: string;
   email: string;
   password: string;
+  usertype: "user" | "org";
 }
 
 export default function useRegisterForm() {
@@ -19,19 +20,12 @@ export default function useRegisterForm() {
   const navigate = useNavigate();
   async function onSubmit(data: FormValues) {
     try {
-      const { username, email, password } = data;
       console.log(data);
-      const res = await axios.post(
-        API_URL + "auth/register",
-        {
-          username,
-          email,
-          password,
-        },
-        { withCredentials: true }
-      );
+      const res = await axios.post(API_URL + "auth/register", data, {
+        withCredentials: true,
+      });
       if (res.status === 200) {
-        navigate("/login");
+        navigate(data.usertype === "user" ? "/login" : "/business/login");
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {

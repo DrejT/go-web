@@ -8,6 +8,7 @@ import { useAuth } from "./useAuth";
 interface FormValues {
   username: string;
   password: string;
+  usertype: "org" | "user";
 }
 
 export default function useLoginForm() {

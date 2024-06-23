@@ -46,6 +46,26 @@ export function Router() {
                 </ProfileLayout>
               }
             >
+              <Route path="business">
+                <Route
+                  path="login"
+                  element={
+                    <RegisterFormLayout>
+                      <LoginPage />
+                    </RegisterFormLayout>
+                  }
+                />
+                <Route
+                  path="register"
+                  element={
+                    <RegisterFormLayout>
+                      <RegisterPage />
+                    </RegisterFormLayout>
+                  }
+                />
+
+                {/* <Route path="" element={<>register page</>} /> */}
+              </Route>
               <Route path=":username" element={<Pro />}>
                 <Route path="onboard" element={<div>onboarding</div>} />
               </Route>
