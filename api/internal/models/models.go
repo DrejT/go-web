@@ -4,10 +4,6 @@
 
 package models
 
-import (
-	"github.com/jackc/pgx/v5/pgtype"
-)
-
 type FullName struct {
 	ID        int64
 	FirstName string
@@ -28,7 +24,7 @@ type User struct {
 	Username      string
 	Email         string
 	PassHash      string
-	OnBoard       pgtype.Bool
+	OnBoard       bool
 	UserType      string
 	UserDetailsID int64
 	OrgDetailsID  int64

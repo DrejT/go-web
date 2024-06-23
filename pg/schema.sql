@@ -24,7 +24,7 @@ CREATE TABLE users (
     username text NOT NULL UNIQUE,
     email text NOT NULL UNIQUE,
     pass_hash text NOT NULL,
-    on_board boolean default false,
+    on_board boolean NOT NULL default false,
     user_type text NOT NULL default 'user',
     user_details_id BIGSERIAL NOT NULL references user_details(id),
     org_details_id BIGSERIAL NOT NULL references org_details(id)

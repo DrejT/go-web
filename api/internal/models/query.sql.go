@@ -232,6 +232,22 @@ func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
 	return items, nil
 }
 
+const updateOnBoard = `-- name: UpdateOnBoard :exec
+UPDATE users
+SET on_board = $2
+WHERE username = $1
+`
+
+type UpdateOnBoardParams struct {
+	Username string
+	OnBoard  bool
+}
+
+func (q *Queries) UpdateOnBoard(ctx context.Context, arg UpdateOnBoardParams) error {
+	_, err := q.db.Exec(ctx, updateOnBoard, arg.Username, arg.OnBoard)
+	return err
+}
+
 const updateOrgDetails = `-- name: UpdateOrgDetails :one
 UPDATE org_details
 SET org_address = COALESCE($1, org_address),

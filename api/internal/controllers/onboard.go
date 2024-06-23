@@ -41,6 +41,13 @@ func UserOnBoard(c *gin.Context) {
 		return
 	}
 
+	err = q.UpdateOnBoard(*ctx, models.UpdateOnBoardParams{Username: onboardReq.Username, OnBoard: true})
+	if err != nil {
+		log.Fatalf("error occured:" + err.Error())
+		c.JSON(http.StatusOK, gin.H{"error": "there was an internal error"})
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"message": "details updated successfully",
 		"data":    userDetail,
@@ -75,6 +82,13 @@ func OrgOnBoard(c *gin.Context) {
 	})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "there was an internal server error"})
+		return
+	}
+
+	err = q.UpdateOnBoard(*ctx, models.UpdateOnBoardParams{Username: orgOnBoardReq.Username, OnBoard: true})
+	if err != nil {
+		log.Fatalf("error occured:" + err.Error())
+		c.JSON(http.StatusOK, gin.H{"error": "there was an internal error"})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
