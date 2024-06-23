@@ -8,6 +8,7 @@ import RegisterPage from "@/pages/register";
 // import SearchPage from "@/pages/search";
 import { Pro } from "@/pages/profile";
 import { ProfileLayout } from "@/layouts/profile";
+import BusinessProfile from "@/pages/businessProfile";
 
 export function Router() {
   return (
@@ -63,6 +64,7 @@ export function Router() {
                     </RegisterFormLayout>
                   }
                 />
+                <Route path=":orgname" element={<BusinessProfile />} />
 
                 {/* <Route path="" element={<>register page</>} /> */}
               </Route>
