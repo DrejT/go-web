@@ -40,13 +40,7 @@ export function Router() {
               }
             />
             {/* <Route path="search" element={<SearchPage />} /> */}
-            <Route
-              element={
-                <ProfileLayout>
-                  <Outlet />
-                </ProfileLayout>
-              }
-            >
+            <Route>
               <Route path="business">
                 <Route
                   path="login"
@@ -64,13 +58,25 @@ export function Router() {
                     </RegisterFormLayout>
                   }
                 />
-                <Route path=":orgname" element={<BusinessProfile />} />
+                <Route
+                  path=":orgname"
+                  element={
+                    <ProfileLayout>
+                      <BusinessProfile />
+                    </ProfileLayout>
+                  }
+                />
 
                 {/* <Route path="" element={<>register page</>} /> */}
               </Route>
-              <Route path=":username" element={<Pro />}>
-                <Route path="onboard" element={<div>onboarding</div>} />
-              </Route>
+              <Route
+                path=":username"
+                element={
+                  <ProfileLayout>
+                    <Pro />
+                  </ProfileLayout>
+                }
+              />
             </Route>
           </Route>
         </Route>
