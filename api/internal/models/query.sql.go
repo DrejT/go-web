@@ -29,7 +29,7 @@ type CreateOrgDetailsParams struct {
 	WebsiteUrl    string
 }
 
-// org details --
+// - org details ---
 func (q *Queries) CreateOrgDetails(ctx context.Context, arg CreateOrgDetailsParams) (OrgDetail, error) {
 	row := q.db.QueryRow(ctx, createOrgDetails,
 		arg.OrgName,
@@ -115,7 +115,7 @@ type CreateUserDetailsParams struct {
 	WebsiteUrl     string
 }
 
-// user details --
+// - user details ---
 func (q *Queries) CreateUserDetails(ctx context.Context, arg CreateUserDetailsParams) (UserDetail, error) {
 	row := q.db.QueryRow(ctx, createUserDetails,
 		arg.CollegeName,
@@ -147,29 +147,49 @@ func (q *Queries) DeleteUser(ctx context.Context, id int64) error {
 }
 
 const getUser = `-- name: GetUser :one
-SELECT id, username, email, pass_hash, on_board, user_type, user_details_id, org_details_id
+SELECT username,
+    pass_hash,
+    email,
+    on_board
 FROM users
 WHERE username = $1
 `
 
-func (q *Queries) GetUser(ctx context.Context, username string) (User, error) {
+type GetUserRow struct {
+	Username string
+	PassHash string
+	Email    string
+	OnBoard  bool
+}
+
+// - user ---
+func (q *Queries) GetUser(ctx context.Context, username string) (GetUserRow, error) {
 	row := q.db.QueryRow(ctx, getUser, username)
-	var i User
+	var i GetUserRow
 	err := row.Scan(
-		&i.ID,
 		&i.Username,
-		&i.Email,
 		&i.PassHash,
+		&i.Email,
 		&i.OnBoard,
-		&i.UserType,
-		&i.UserDetailsID,
-		&i.OrgDetailsID,
 	)
 	return i, err
 }
 
-const getUsers = `-- name: GetUsers :one
+const getUserAndDetails = `-- name: GetUserAndDetails :exec
 SELECT id, username, email, pass_hash, on_board, user_type, user_details_id, org_details_id
+FROM users
+ORDER BY username
+`
+
+func (q *Queries) GetUserAndDetails(ctx context.Context) error {
+	_, err := q.db.Exec(ctx, getUserAndDetails)
+	return err
+}
+
+const getUsers = `-- name: GetUsers :one
+SELECT username,
+    email,
+    pass_hash
 FROM users
 WHERE username = $1
     OR email = $2
@@ -181,55 +201,17 @@ type GetUsersParams struct {
 	Email    string
 }
 
-func (q *Queries) GetUsers(ctx context.Context, arg GetUsersParams) (User, error) {
-	row := q.db.QueryRow(ctx, getUsers, arg.Username, arg.Email)
-	var i User
-	err := row.Scan(
-		&i.ID,
-		&i.Username,
-		&i.Email,
-		&i.PassHash,
-		&i.OnBoard,
-		&i.UserType,
-		&i.UserDetailsID,
-		&i.OrgDetailsID,
-	)
-	return i, err
+type GetUsersRow struct {
+	Username string
+	Email    string
+	PassHash string
 }
 
-const listUsers = `-- name: ListUsers :many
-SELECT id, username, email, pass_hash, on_board, user_type, user_details_id, org_details_id
-FROM users
-ORDER BY username
-`
-
-func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
-	rows, err := q.db.Query(ctx, listUsers)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []User
-	for rows.Next() {
-		var i User
-		if err := rows.Scan(
-			&i.ID,
-			&i.Username,
-			&i.Email,
-			&i.PassHash,
-			&i.OnBoard,
-			&i.UserType,
-			&i.UserDetailsID,
-			&i.OrgDetailsID,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
+func (q *Queries) GetUsers(ctx context.Context, arg GetUsersParams) (GetUsersRow, error) {
+	row := q.db.QueryRow(ctx, getUsers, arg.Username, arg.Email)
+	var i GetUsersRow
+	err := row.Scan(&i.Username, &i.Email, &i.PassHash)
+	return i, err
 }
 
 const updateOnBoard = `-- name: UpdateOnBoard :exec

@@ -1,13 +1,20 @@
+--- user ---
 -- name: GetUser :one
-SELECT *
+SELECT username,
+    pass_hash,
+    email,
+    on_board
 FROM users
 WHERE username = $1;
 -- name: GetUsers :one
-SELECT *
+SELECT username,
+    email,
+    pass_hash
 FROM users
 WHERE username = $1
     OR email = $2
 LIMIT 1;
+-- name: GetUserAndDetails :exec
 -- name: ListUsers :many
 SELECT *
 FROM users
@@ -34,7 +41,7 @@ WHERE username = $1;
 -- name: DeleteUser :exec
 DELETE FROM users
 WHERE id = $1;
--- user details --
+--- user details ---
 -- name: CreateUserDetails :one
 INSERT INTO user_details (
         college_name,
@@ -58,7 +65,7 @@ WHERE id = (
         WHERE username = $6
     )
 RETURNING *;
--- org details --
+--- org details ---
 -- name: CreateOrgDetails :one
 INSERT INTO org_details (
         org_name,

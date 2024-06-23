@@ -33,7 +33,7 @@ export default function useLoginForm() {
         setIsLoggedIn(true);
         setUsername(responseData.data.username);
         navigate("/" + responseData.data.username);
-        // navigate(0);
+        navigate(0);
       }
     } catch (error) {
       console.error(error);
