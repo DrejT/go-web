@@ -3,7 +3,6 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useAuth } from "./useAuth";
 import { useNavigate } from "react-router-dom";
-import useOrg from "./useOrg";
 
 interface FormValues {
   orgName: string;
