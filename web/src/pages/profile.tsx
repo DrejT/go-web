@@ -3,7 +3,7 @@ import { Bio, GithubUrl, Onboard } from "@/components/profile";
 import { useAuth } from "@/hooks/useAuth";
 import useProfile from "@/hooks/useProfile";
 import { ProfileData } from "@/lib/types";
-import { Outlet, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 export function Profile() {
   const { error, isOrg, data } = useProfile();

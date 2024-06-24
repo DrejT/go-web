@@ -25,7 +25,7 @@ export default function useRegisterForm() {
         withCredentials: true,
       });
       if (res.status === 200) {
-        navigate(data.usertype === "user" ? "/login" : "/business/login");
+        navigate(data.usertype === "user" ? "/login" : "/org/login");
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
