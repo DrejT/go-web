@@ -36,7 +36,7 @@ export default function useProfile() {
       }
     }
     fetchData();
-  }, [setData, params.username, orgName]);
+  }, [setData, params.username, orgName, isOrg]);
   console.log(isOrg, orgName, data);
 
   return { data, params, error };
