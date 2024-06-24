@@ -3,11 +3,12 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import useOrg from "./useOrg";
+import { ProfileData } from "@/lib/types";
 
 export default function useProfile() {
   const params = useParams();
-  const [data, setData] = useState<boolean>(false);
-  const [error, setError] = useState<string>();
+  const [data, setData] = useState<ProfileData>({});
+  const [error, setError] = useState<string>("");
   const { isOrg, orgName } = useOrg();
 
   useEffect(() => {
@@ -27,7 +28,8 @@ export default function useProfile() {
             { withCredentials: true }
           );
         }
-        setData(res.data);
+        const { data } = res.data;
+        setData(data);
       } catch (error) {
         if (axios.isAxiosError(error)) {
           setError(error.response?.data?.error);
@@ -37,7 +39,6 @@ export default function useProfile() {
     }
     fetchData();
   }, [setData, params.username, orgName, isOrg]);
-  console.log(isOrg, orgName, data);
 
-  return { data, params, error };
+  return { data, error, isOrg };
 }

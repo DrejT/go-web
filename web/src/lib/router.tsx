@@ -6,7 +6,7 @@ import RegisterFormLayout from "@/layouts/register";
 import LoginPage from "@/pages/login";
 import RegisterPage from "@/pages/register";
 // import SearchPage from "@/pages/search";
-import { Pro } from "@/pages/profile";
+import { Profile } from "@/pages/profile";
 import { ProfileLayout } from "@/layouts/profile";
 
 export function Router() {
@@ -61,7 +61,7 @@ export function Router() {
                   path=":orgname"
                   element={
                     <ProfileLayout>
-                      <Pro />
+                      <Profile />
                     </ProfileLayout>
                   }
                 />
@@ -72,7 +72,7 @@ export function Router() {
                 path=":username"
                 element={
                   <ProfileLayout>
-                    <Pro />
+                    <Profile />
                   </ProfileLayout>
                 }
               />

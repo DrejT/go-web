@@ -3,7 +3,8 @@
 SELECT username,
     pass_hash,
     email,
-    on_board
+    on_board,
+    user_type
 FROM users
 WHERE username = $1;
 -- name: GetUsers :one

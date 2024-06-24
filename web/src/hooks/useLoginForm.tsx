@@ -25,14 +25,17 @@ export default function useLoginForm() {
       const res = await axios.post(API_URL + "auth/login", data, {
         withCredentials: true,
       });
-      if (data.usertype === "user" && res.status === 200) {
-        const responseData = res.data as FormResponse;
-        console.log(responseData);
+      const responseData = res.data as FormResponse;
+      if (responseData.data.UserType === "org" && res.status === 200) {
         setIsLoggedIn(true);
-        setUsername(responseData.data.username);
-        navigate("/" + responseData.data.username);
-        navigate(0);
+        setUsername(responseData.data.Username);
+        navigate("/org/" + responseData.data.Username);
+      } else if (responseData.data.UserType === "user" && res.status === 200) {
+        setIsLoggedIn(true);
+        setUsername(responseData.data.Username);
+        navigate("/" + responseData.data.Username);
       }
+      navigate(0);
     } catch (error) {
       console.error(error);
       if (axios.isAxiosError(error)) {

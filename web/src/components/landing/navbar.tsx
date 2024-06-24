@@ -15,7 +15,7 @@ interface NavItem {
 }
 
 export function NavBar() {
-  const { isLoggedIn, username } = useAuth();
+  const { isLoggedIn, username, userType } = useAuth();
   const p = useLocation();
   const url = p.pathname === "/login" ? "register" : "login";
   return (
@@ -31,7 +31,13 @@ export function NavBar() {
             <div>
               <NavigationMenuItem>
                 {isLoggedIn ? (
-                  <ProfileAvatar username={username} src="" h={10} w={10} />
+                  <ProfileAvatar
+                    username={username}
+                    src=""
+                    h={10}
+                    w={10}
+                    usertype={userType}
+                  />
                 ) : (
                   <Link to={url}>
                     <Button>{url}</Button>
@@ -121,14 +127,17 @@ export function ProfileAvatar({
   src,
   h,
   w,
+  usertype,
 }: {
   username: string;
   src: string;
   h: number;
   w: number;
+  usertype: string;
 }) {
+  const profileUrl = usertype === "org" ? "/org/" + username : "/" + username;
   return (
-    <Link to={"/" + username} className="">
+    <Link to={profileUrl} className="">
       <Avatar className={`rounded-full w-${w} h-${h} overflow-hidden`}>
         <AvatarImage
           // className="w-full h-full"

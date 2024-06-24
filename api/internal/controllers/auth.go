@@ -47,10 +47,11 @@ func LoginAuth(c *gin.Context) {
 		return
 	}
 
+	user.PassHash = ""
 	// send a successful login response
 	c.JSON(200, gin.H{
 		"message": "Login successful",
-		"data":    loginReq,
+		"data":    user,
 	})
 }
 

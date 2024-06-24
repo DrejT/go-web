@@ -174,7 +174,8 @@ const getUser = `-- name: GetUser :one
 SELECT username,
     pass_hash,
     email,
-    on_board
+    on_board,
+    user_type
 FROM users
 WHERE username = $1
 `
@@ -184,6 +185,7 @@ type GetUserRow struct {
 	PassHash string
 	Email    string
 	OnBoard  bool
+	UserType string
 }
 
 // - user ---
@@ -195,6 +197,7 @@ func (q *Queries) GetUser(ctx context.Context, username string) (GetUserRow, err
 		&i.PassHash,
 		&i.Email,
 		&i.OnBoard,
+		&i.UserType,
 	)
 	return i, err
 }

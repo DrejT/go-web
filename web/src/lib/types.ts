@@ -30,12 +30,22 @@ export interface authContextProps {
 type Role = "admin" | "user" | "business";
 
 interface DataResponse {
-  username: string;
-  email: string;
-  role: Role;
+  Email: string;
+  OnBoard: boolean;
+  PassHash: string;
+  UserType: string;
+  Username: string;
 }
 
 export interface FormResponse {
   username: string;
   data: DataResponse;
+}
+
+export interface ProfileData {
+  Email?: string;
+  ID?: number;
+  OnBoard?: boolean;
+  UserType?: "org" | "user";
+  Username?: string;
 }

@@ -16,7 +16,6 @@ export function useAuth() {
           })
           .catch((error) => console.error(error));
         if (res?.status === 200) {
-          console.log(res);
           setIsLoggedIn(true);
           setUsername(res.data.user.Username);
           setOnboard(res.data.user.OnBoard);
@@ -27,7 +26,6 @@ export function useAuth() {
       console.error(error);
     }
   }, [isLoggedIn, username, onboard]);
-  console.log(isLoggedIn, username, onboard);
   return {
     username,
     isLoggedIn,
