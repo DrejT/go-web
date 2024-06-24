@@ -3,6 +3,7 @@ package controllers
 import (
 	"net/http"
 
+	"github.com/drejt/api/internal/db"
 	"github.com/gin-gonic/gin"
 )
 
@@ -19,6 +20,14 @@ func GetOrgByName(c *gin.Context) {
 		return
 	}
 
-	// q, ctx := db.GetDbConn()
-	// q.GetUserAndDetails()
+	q, ctx := db.GetDbConn()
+	user, err := q.GetOrg(*ctx, org.OrgName)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "org name not found. please make sure the org is registered "})
+		return
+	}
+
+	user.Email = ""
+	user.PassHash = ""
+	c.JSON(http.StatusOK, gin.H{"data": user})
 }

@@ -4,7 +4,7 @@ import { Label } from "../ui/label";
 import { Button } from "../ui/button";
 import useRegisterForm from "@/hooks/useRegisterForm";
 import InputError from "../ui/inputError";
-import useBusiness from "@/hooks/useBusiness";
+import useBusiness from "@/hooks/useOrg";
 
 export function RegisterForm() {
   const { errors, register, handleSubmit, onSubmit } = useRegisterForm();

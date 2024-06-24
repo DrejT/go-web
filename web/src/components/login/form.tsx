@@ -4,18 +4,18 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import useLoginForm from "@/hooks/useLoginForm";
 import InputError from "../ui/inputError";
-import useBusiness from "@/hooks/useBusiness";
+import useBusiness from "@/hooks/useOrg";
 
 export function LoginForm() {
   const { handleSubmit, onSubmit, register, errors } = useLoginForm();
   console.log(errors);
-  const { userType, registerUrl, isBusiness } = useBusiness();
+  const { userType, registerUrl, isOrg } = useBusiness();
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="">
         <div className="flex justify-center">
           <h3 className="md:text-2xl font-semibold">
-            {isBusiness ? "Business " : ""}
+            {isOrg ? "Business " : ""}
             Login
           </h3>
         </div>

@@ -146,6 +146,30 @@ func (q *Queries) DeleteUser(ctx context.Context, id int64) error {
 	return err
 }
 
+const getOrg = `-- name: GetOrg :one
+SELECT id, username, email, pass_hash, on_board, user_type, user_details_id, org_details_id
+FROM users
+WHERE user_type = 'org'
+    AND username = $1
+`
+
+// - org ---
+func (q *Queries) GetOrg(ctx context.Context, username string) (User, error) {
+	row := q.db.QueryRow(ctx, getOrg, username)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.Username,
+		&i.Email,
+		&i.PassHash,
+		&i.OnBoard,
+		&i.UserType,
+		&i.UserDetailsID,
+		&i.OrgDetailsID,
+	)
+	return i, err
+}
+
 const getUser = `-- name: GetUser :one
 SELECT username,
     pass_hash,
@@ -175,17 +199,6 @@ func (q *Queries) GetUser(ctx context.Context, username string) (GetUserRow, err
 	return i, err
 }
 
-const getUserAndDetails = `-- name: GetUserAndDetails :exec
-SELECT id, username, email, pass_hash, on_board, user_type, user_details_id, org_details_id
-FROM users
-ORDER BY username
-`
-
-func (q *Queries) GetUserAndDetails(ctx context.Context) error {
-	_, err := q.db.Exec(ctx, getUserAndDetails)
-	return err
-}
-
 const getUsers = `-- name: GetUsers :one
 SELECT username,
     email,
@@ -212,6 +225,41 @@ func (q *Queries) GetUsers(ctx context.Context, arg GetUsersParams) (GetUsersRow
 	var i GetUsersRow
 	err := row.Scan(&i.Username, &i.Email, &i.PassHash)
 	return i, err
+}
+
+const listUsers = `-- name: ListUsers :many
+SELECT id, username, email, pass_hash, on_board, user_type, user_details_id, org_details_id
+FROM users
+ORDER BY username
+`
+
+func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
+	rows, err := q.db.Query(ctx, listUsers)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []User
+	for rows.Next() {
+		var i User
+		if err := rows.Scan(
+			&i.ID,
+			&i.Username,
+			&i.Email,
+			&i.PassHash,
+			&i.OnBoard,
+			&i.UserType,
+			&i.UserDetailsID,
+			&i.OrgDetailsID,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 const updateOnBoard = `-- name: UpdateOnBoard :exec

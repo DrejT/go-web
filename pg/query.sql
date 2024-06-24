@@ -14,7 +14,6 @@ FROM users
 WHERE username = $1
     OR email = $2
 LIMIT 1;
--- name: GetUserAndDetails :exec
 -- name: ListUsers :many
 SELECT *
 FROM users
@@ -41,6 +40,12 @@ WHERE username = $1;
 -- name: DeleteUser :exec
 DELETE FROM users
 WHERE id = $1;
+--- org ---
+-- name: GetOrg :one
+SELECT *
+FROM users
+WHERE user_type = 'org'
+    AND username = $1;
 --- user details ---
 -- name: CreateUserDetails :one
 INSERT INTO user_details (

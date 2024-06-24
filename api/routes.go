@@ -28,11 +28,12 @@ func (r *router) SetupRouter(router *gin.Engine) {
 		authRouter.GET("/session", controllers.RevalidateSession)
 
 		userRouter := api.Group("/user")
-		userRouter.Use(middlewares.VerifySession())
 		userRouter.POST("/", controllers.GetUserByUsername)
+		userRouter.Use(middlewares.VerifySession())
 		userRouter.POST("/onboard", controllers.UserOnBoard)
 
 		orgRouter := api.Group("/org")
+		orgRouter.POST("/", controllers.GetOrgByName)
 		orgRouter.Use(middlewares.VerifySession())
 		orgRouter.POST("/onboard", controllers.OrgOnBoard)
 

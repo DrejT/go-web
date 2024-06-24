@@ -8,7 +8,6 @@ import RegisterPage from "@/pages/register";
 // import SearchPage from "@/pages/search";
 import { Pro } from "@/pages/profile";
 import { ProfileLayout } from "@/layouts/profile";
-import BusinessProfilePage from "@/pages/businessProfile";
 
 export function Router() {
   return (
@@ -41,7 +40,7 @@ export function Router() {
             />
             {/* <Route path="search" element={<SearchPage />} /> */}
             <Route>
-              <Route path="business">
+              <Route path="org">
                 <Route
                   path="login"
                   element={
@@ -62,7 +61,7 @@ export function Router() {
                   path=":orgname"
                   element={
                     <ProfileLayout>
-                      <BusinessProfilePage />
+                      <Pro />
                     </ProfileLayout>
                   }
                 />
