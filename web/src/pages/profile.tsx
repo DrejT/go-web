@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import useProfile from "@/hooks/useProfile";
 import { ProfileData } from "@/lib/types";
 import { useParams } from "react-router-dom";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export function Profile() {
   const { error, isOrg, data } = useProfile();
@@ -62,26 +63,88 @@ export function Profile() {
 function OrgProfile({ data }: { data: ProfileData }) {
   const { isLoggedIn, username, onboard, userType } = useAuth();
   const p = useParams();
-  // case where user is viewing their own profile with an active session
+  // user is viewing their own profile with an active session
   if (isLoggedIn && username === p.orgname) {
     // if the user has not yet been onboarded
     if (!onboard) {
       return <Onboard userType={userType} />;
     }
-    return <div>welcome back {username}</div>;
+    return (
+      <div>
+        welcome back {username}
+        <div>
+          <div className="flex justify-center">
+            <div>
+              <ProfileAvatar
+                username={p.orgname || ""}
+                src=""
+                h={18}
+                w={18}
+                usertype="org"
+              />
+              {data.Username}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   // user is viewing other person's profile with an active session
-  if (isLoggedIn) {
-    return <div>hello guest</div>;
-  }
+  // if (isLoggedIn) {
+  //   return <div>hello guest</div>;
+  // }
 
   // default profile shown to guests without an active session
   return (
     <div>
-      <div className="flex justify-center">{data.UserType}</div>
+      <div className="flex justify-center">
+        <div>
+          <ProfileAvatar
+            username={p.orgname || ""}
+            src=""
+            h={18}
+            w={18}
+            usertype="org"
+          />
+          <div className="text-center text-pretty font-semibold text-3xl m-4">
+            {data.Username}
+          </div>
+        </div>
+      </div>
+
+      <div className="flex justify-center">
+        <Tabs defaultValue="details" className="">
+          <TabsList>
+            <TabsTrigger className="w-[400px]" value="details">
+              Details
+            </TabsTrigger>
+            <TabsTrigger className="w-[400px]" value="jobs">
+              Jobs
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="details">
+            <DetailsSection data={data} />
+          </TabsContent>
+          <TabsContent value="jobs">
+            <JobsSection data={data} />
+          </TabsContent>
+        </Tabs>
+      </div>
     </div>
   );
+}
+
+function DetailsSection({ data }: { data: ProfileData }) {
+  return (
+    <div>
+      <div></div>
+    </div>
+  );
+}
+
+function JobsSection({ data }: { data: ProfileData }) {
+  return <div>showing jobs</div>;
 }
 
 function UserProfile({ data }: { data: ProfileData }) {
@@ -93,18 +156,36 @@ function UserProfile({ data }: { data: ProfileData }) {
     if (!onboard) {
       return <Onboard userType={userType} />;
     }
-    return <div>welcome back {username}</div>;
+    return (
+      <div>
+        welcome back {username}
+        <div>
+          <div className="flex justify-center">
+            <div>
+              <ProfileAvatar
+                username={p.orgname || ""}
+                src=""
+                h={18}
+                w={18}
+                usertype="org"
+              />
+              {data.Username}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   // user is viewing other person's profile with an active session
-  if (isLoggedIn) {
-    return <div>hello guest</div>;
-  }
+  // if (isLoggedIn) {
+  //   return <div>hello guest</div>;
+  // }
 
   // default profile shown to guests without an active session
   return (
     <div>
-      <div className="flex justify-center">{data.UserType}</div>
+      <div className="flex justify-center">{data.Username}</div>
     </div>
   );
 }

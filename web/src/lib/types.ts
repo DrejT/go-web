@@ -43,9 +43,9 @@ export interface FormResponse {
 }
 
 export interface ProfileData {
-  Email?: string;
-  ID?: number;
-  OnBoard?: boolean;
-  UserType?: "org" | "user";
-  Username?: string;
+  Email: string;
+  ID: number;
+  OnBoard: boolean;
+  UserType: "org" | "user";
+  Username: string;
 }
