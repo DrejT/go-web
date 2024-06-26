@@ -147,25 +147,51 @@ func (q *Queries) DeleteUser(ctx context.Context, id int64) error {
 }
 
 const getOrg = `-- name: GetOrg :one
-SELECT id, username, email, pass_hash, on_board, user_type, user_details_id, org_details_id
-FROM users
-WHERE user_type = 'org'
-    AND username = $1
+SELECT username,
+    pass_hash,
+    email,
+    on_board,
+    user_type,
+    org_name,
+    org_address,
+    pincode,
+    employee_count,
+    website_url
+FROM users,
+    org_details
+WHERE username = $1
+    AND user_type = 'org'
+    AND users.org_details_id = org_details.id
 `
 
+type GetOrgRow struct {
+	Username      string
+	PassHash      string
+	Email         string
+	OnBoard       bool
+	UserType      string
+	OrgName       string
+	OrgAddress    string
+	Pincode       int32
+	EmployeeCount int32
+	WebsiteUrl    string
+}
+
 // - org ---
-func (q *Queries) GetOrg(ctx context.Context, username string) (User, error) {
+func (q *Queries) GetOrg(ctx context.Context, username string) (GetOrgRow, error) {
 	row := q.db.QueryRow(ctx, getOrg, username)
-	var i User
+	var i GetOrgRow
 	err := row.Scan(
-		&i.ID,
 		&i.Username,
-		&i.Email,
 		&i.PassHash,
+		&i.Email,
 		&i.OnBoard,
 		&i.UserType,
-		&i.UserDetailsID,
-		&i.OrgDetailsID,
+		&i.OrgName,
+		&i.OrgAddress,
+		&i.Pincode,
+		&i.EmployeeCount,
+		&i.WebsiteUrl,
 	)
 	return i, err
 }
@@ -175,17 +201,30 @@ SELECT username,
     pass_hash,
     email,
     on_board,
-    user_type
-FROM users
+    user_type,
+    college_name,
+    education,
+    github_url,
+    university_name,
+    website_url
+FROM users,
+    user_details
 WHERE username = $1
+    AND user_type = 'user'
+    AND users.user_details_id = user_details.id
 `
 
 type GetUserRow struct {
-	Username string
-	PassHash string
-	Email    string
-	OnBoard  bool
-	UserType string
+	Username       string
+	PassHash       string
+	Email          string
+	OnBoard        bool
+	UserType       string
+	CollegeName    string
+	Education      string
+	GithubUrl      string
+	UniversityName string
+	WebsiteUrl     string
 }
 
 // - user ---
@@ -198,6 +237,11 @@ func (q *Queries) GetUser(ctx context.Context, username string) (GetUserRow, err
 		&i.Email,
 		&i.OnBoard,
 		&i.UserType,
+		&i.CollegeName,
+		&i.Education,
+		&i.GithubUrl,
+		&i.UniversityName,
+		&i.WebsiteUrl,
 	)
 	return i, err
 }

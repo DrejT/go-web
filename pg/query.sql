@@ -4,9 +4,17 @@ SELECT username,
     pass_hash,
     email,
     on_board,
-    user_type
-FROM users
-WHERE username = $1;
+    user_type,
+    college_name,
+    education,
+    github_url,
+    university_name,
+    website_url
+FROM users,
+    user_details
+WHERE username = $1
+    AND user_type = 'user'
+    AND users.user_details_id = user_details.id;
 -- name: GetUsers :one
 SELECT username,
     email,
@@ -43,10 +51,21 @@ DELETE FROM users
 WHERE id = $1;
 --- org ---
 -- name: GetOrg :one
-SELECT *
-FROM users
-WHERE user_type = 'org'
-    AND username = $1;
+SELECT username,
+    pass_hash,
+    email,
+    on_board,
+    user_type,
+    org_name,
+    org_address,
+    pincode,
+    employee_count,
+    website_url
+FROM users,
+    org_details
+WHERE username = $1
+    AND user_type = 'org'
+    AND users.org_details_id = org_details.id;
 --- user details ---
 -- name: CreateUserDetails :one
 INSERT INTO user_details (

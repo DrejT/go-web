@@ -5,6 +5,7 @@ import useProfile from "@/hooks/useProfile";
 import { ProfileData } from "@/lib/types";
 import { useParams } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useEffect } from "react";
 
 export function Profile() {
   const { error, isOrg, data } = useProfile();

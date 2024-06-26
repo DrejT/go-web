@@ -24,7 +24,7 @@ func GetUserByUsername(c *gin.Context) {
 	q, ctx := db.GetDbConn()
 	user, err := q.GetUser(*ctx, u.Username)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "there was an error"})
+		c.JSON(http.StatusNotFound, gin.H{"error": "this user does not exist"})
 		return
 	}
 	user.PassHash = ""
