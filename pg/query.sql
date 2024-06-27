@@ -120,3 +120,15 @@ RETURNING *;
 SELECT *
 FROM jobs
 WHERE org_name = $1;
+-- name: CreateNewJob :one
+INSERT INTO jobs (
+        org_name,
+        title,
+        description,
+        location,
+        experience,
+        job_type,
+        flexibilty
+    )
+VALUES ($1, $2, $3, $4, $5, $6, $7)
+RETURNING *;

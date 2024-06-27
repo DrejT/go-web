@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/drejt/api/internal/db"
+	"github.com/drejt/api/internal/models"
 	"github.com/gin-gonic/gin"
 )
 
@@ -56,4 +57,41 @@ func GetOrgJobs(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "successfully fetched org jobs", "data": jobs})
+}
+
+type AddNewJobRequest struct {
+	OrgName     string `json:"username" binding:"required"`
+	Title       string `json:"Title" binding:"required"`
+	Description string `json:"Description" binding:"required"`
+	Location    string `json:"Location" binding:"required"`
+	Experience  string `json:"Experience" binding:"required"`
+	JobType     string `json:"JobType" binding:"required"`
+	Flexibility string `json:"Flexibility" binding:"required"`
+}
+
+func AddNewJob(c *gin.Context) {
+	var AddJobReq AddNewJobRequest
+	if err := c.ShouldBindJSON(&AddJobReq); err != nil {
+		c.JSON(http.StatusConflict, gin.H{"error": err.Error()})
+		return
+	}
+
+	newJob := models.CreateNewJobParams{
+		OrgName:     AddJobReq.OrgName,
+		Title:       AddJobReq.Title,
+		Description: AddJobReq.Description,
+		JobType:     AddJobReq.JobType,
+		Experience:  AddJobReq.Experience,
+		Flexibilty:  AddJobReq.Flexibility,
+		Location:    AddJobReq.Location,
+	}
+
+	q, ctx := db.GetDbConn()
+	job, err := q.CreateNewJob(*ctx, newJob)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "there was an error while creating new job"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "added job successfully", "data": job})
 }

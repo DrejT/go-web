@@ -13,7 +13,7 @@ export default function useJobs() {
     try {
       (async function () {
         res = await axios.post(
-          API_URL + "org/jobs",
+          API_URL + "org/job",
           { orgName },
           { withCredentials: true }
         );

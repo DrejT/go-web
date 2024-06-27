@@ -9,6 +9,55 @@ import (
 	"context"
 )
 
+const createNewJob = `-- name: CreateNewJob :one
+INSERT INTO jobs (
+        org_name,
+        title,
+        description,
+        location,
+        experience,
+        job_type,
+        flexibilty
+    )
+VALUES ($1, $2, $3, $4, $5, $6, $7)
+RETURNING id, org_name, title, description, location, experience, language, job_type, flexibilty
+`
+
+type CreateNewJobParams struct {
+	OrgName     string
+	Title       string
+	Description string
+	Location    string
+	Experience  string
+	JobType     string
+	Flexibilty  string
+}
+
+func (q *Queries) CreateNewJob(ctx context.Context, arg CreateNewJobParams) (Job, error) {
+	row := q.db.QueryRow(ctx, createNewJob,
+		arg.OrgName,
+		arg.Title,
+		arg.Description,
+		arg.Location,
+		arg.Experience,
+		arg.JobType,
+		arg.Flexibilty,
+	)
+	var i Job
+	err := row.Scan(
+		&i.ID,
+		&i.OrgName,
+		&i.Title,
+		&i.Description,
+		&i.Location,
+		&i.Experience,
+		&i.Language,
+		&i.JobType,
+		&i.Flexibilty,
+	)
+	return i, err
+}
+
 const createOrgDetails = `-- name: CreateOrgDetails :one
 INSERT INTO org_details (
         org_name,

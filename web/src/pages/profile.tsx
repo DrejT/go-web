@@ -174,6 +174,7 @@ function DetailsSection({ data }: { data: ProfileData }) {
 
 function JobsSection() {
   const { jobsList, error } = useJobs();
+  console.log(jobsList);
   return (
     <>
       <AddJobButton />
@@ -187,9 +188,8 @@ function JobsSection() {
               description={jobObj.Description}
               location={jobObj.Location}
               experience={jobObj.Experience}
-              language={jobObj.Language}
               jobType={jobObj.JobType}
-              flexibilty={jobObj.Flexibilty}
+              flexibility={jobObj.Flexibility}
             />
           ))}
         </>
@@ -246,13 +246,13 @@ function AddJobButton() {
                 </RadioGroup>
               </div>
               <div className="mb-2">
-                <Label htmlFor="flexibilty">flexibilty</Label>
+                <Label htmlFor="flexibility">flexibility</Label>
 
                 <RadioGroup
                   className="flex"
-                  id="flexibilty"
+                  id="flexibility"
                   defaultValue="in-office"
-                  {...register("Flexibilty")}
+                  {...register("Flexibility")}
                 >
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="in-office" id="in-office" />
@@ -343,17 +343,15 @@ function Job({
   description,
   location,
   experience,
-  language,
   jobType,
-  flexibilty,
+  flexibility,
 }: {
   title: string;
   description: string;
   location: string;
   experience: string;
-  language: string;
   jobType: "full-time" | "part-time";
-  flexibilty: "in-office" | "work-from-home";
+  flexibility: "in-office" | "work-from-home";
 }) {
   return (
     <div>

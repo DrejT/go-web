@@ -60,7 +60,6 @@ export interface JobProps {
   Description: string;
   Location: string;
   Experience: string;
-  Language: string;
   JobType: "full-time" | "part-time";
-  Flexibilty: "in-office" | "work-from-home";
+  Flexibility: "in-office" | "work-from-home";
 }
