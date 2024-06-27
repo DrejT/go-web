@@ -22,7 +22,6 @@ export function Profile() {
   if (error) {
     return <div>{error}</div>;
   }
-  console.log(data);
   if (isOrg) {
     return <OrgProfile data={data} />;
   } else {
@@ -162,9 +161,9 @@ function DetailsSection({ data }: { data: ProfileData }) {
 }
 
 function JobsSection() {
-  const { jobsList } = useJobs();
-  if (jobsList.length < 1) {
-    return <div>no jobs listed right now</div>;
+  const { jobsList, error } = useJobs();
+  if (!jobsList) {
+    return <div>{error}</div>;
   }
   return (
     <div>

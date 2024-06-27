@@ -43,14 +43,17 @@ func GetOrgJobs(c *gin.Context) {
 		return
 	}
 
-	// q, ctx := db.GetDbConn()
+	q, ctx := db.GetDbConn()
+	jobs, err := q.GetOrgJobs(*ctx, orgJob.OrgName)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "no not found"})
+		return
+	}
 
-	// jobs, err := q.getOrgJobs()
-	// if err != nil {
-	// 	c.JSON(http.StatusNotFound, gin.H{"error": "no not found"})
-	// 	return
-	// }
+	if len(jobs) < 1 {
+		c.JSON(http.StatusOK, gin.H{"error": "no jobs listed"})
+		return
+	}
 
-	// change orgjob to jobs var
-	c.JSON(http.StatusOK, gin.H{"message": "successfully fetched org jobs", "data": orgJob})
+	c.JSON(http.StatusOK, gin.H{"message": "successfully fetched org jobs", "data": jobs})
 }

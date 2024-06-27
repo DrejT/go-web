@@ -199,6 +199,43 @@ func (q *Queries) GetOrg(ctx context.Context, username string) (GetOrgRow, error
 	return i, err
 }
 
+const getOrgJobs = `-- name: GetOrgJobs :many
+SELECT id, org_name, title, description, location, experience, language, job_type, flexibilty
+FROM jobs
+WHERE org_name = $1
+`
+
+// - jobs ---
+func (q *Queries) GetOrgJobs(ctx context.Context, orgName string) ([]Job, error) {
+	rows, err := q.db.Query(ctx, getOrgJobs, orgName)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Job
+	for rows.Next() {
+		var i Job
+		if err := rows.Scan(
+			&i.ID,
+			&i.OrgName,
+			&i.Title,
+			&i.Description,
+			&i.Location,
+			&i.Experience,
+			&i.Language,
+			&i.JobType,
+			&i.Flexibilty,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getUser = `-- name: GetUser :one
 SELECT username,
     pass_hash,

@@ -4,7 +4,7 @@ CREATE TABLE org_details (
     org_address text NOT NULL default '',
     pincode INT NOT NULL default 000000,
     employee_count INT NOT NULL default 1,
-    website_url text NOT NULL default '',
+    website_url text NOT NULL default ''
 );
 CREATE TABLE user_details (
     id BIGSERIAL PRIMARY KEY,
@@ -16,13 +16,14 @@ CREATE TABLE user_details (
 );
 CREATE TABLE jobs (
     id BIGSERIAL PRIMARY KEY,
-    Title text NOT NULL default '',
-    Description text NOT NULL default '',
-    Location text NOT NULL default '',
-    Experience text NOT NULL default '',
-    Language text NOT NULL default '',
-    JobType: text NOT NULL default '',
-    Flexibilty: text NOT NULL default ''
+    org_name text NOT NULL references users(username),
+    title text NOT NULL default '',
+    description text NOT NULL default '',
+    location text NOT NULL default '',
+    experience text NOT NULL default '',
+    language text NOT NULL default '',
+    job_type text NOT NULL default '',
+    flexibilty text NOT NULL default ''
 );
 CREATE TABLE full_name (
     id BIGSERIAL PRIMARY KEY,
@@ -38,4 +39,9 @@ CREATE TABLE users (
     user_type text NOT NULL default 'user',
     user_details_id BIGSERIAL NOT NULL references user_details(id),
     org_details_id BIGSERIAL NOT NULL references org_details(id)
+);
+CREATE TABLE applications (
+    id BIGSERIAL PRIMARY KEY,
+    job_id BIGSERIAL NOT NULL references jobs(id),
+    applicants BIGSERIAL NOT NULL references users(id)
 );

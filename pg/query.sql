@@ -116,3 +116,8 @@ WHERE id =(
         WHERE username = $6
     )
 RETURNING *;
+--- jobs ---
+-- name: GetOrgJobs :many
+SELECT *
+FROM jobs
+WHERE org_name = $1;

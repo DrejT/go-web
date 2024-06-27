@@ -4,10 +4,28 @@
 
 package models
 
+type Application struct {
+	ID         int64
+	JobID      int64
+	Applicants int64
+}
+
 type FullName struct {
 	ID        int64
 	FirstName string
 	LastName  string
+}
+
+type Job struct {
+	ID          int64
+	OrgName     string
+	Title       string
+	Description string
+	Location    string
+	Experience  string
+	Language    string
+	JobType     string
+	Flexibilty  string
 }
 
 type OrgDetail struct {
