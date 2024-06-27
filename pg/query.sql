@@ -9,7 +9,8 @@ SELECT username,
     education,
     github_url,
     university_name,
-    website_url
+    website_url,
+    users.id
 FROM users,
     user_details
 WHERE username = $1
@@ -60,7 +61,8 @@ SELECT username,
     org_address,
     pincode,
     employee_count,
-    website_url
+    website_url,
+    users.id
 FROM users,
     org_details
 WHERE username = $1

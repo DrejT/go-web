@@ -156,7 +156,8 @@ SELECT username,
     org_address,
     pincode,
     employee_count,
-    website_url
+    website_url,
+    users.id
 FROM users,
     org_details
 WHERE username = $1
@@ -175,6 +176,7 @@ type GetOrgRow struct {
 	Pincode       int32
 	EmployeeCount int32
 	WebsiteUrl    string
+	ID            int64
 }
 
 // - org ---
@@ -192,6 +194,7 @@ func (q *Queries) GetOrg(ctx context.Context, username string) (GetOrgRow, error
 		&i.Pincode,
 		&i.EmployeeCount,
 		&i.WebsiteUrl,
+		&i.ID,
 	)
 	return i, err
 }
@@ -206,7 +209,8 @@ SELECT username,
     education,
     github_url,
     university_name,
-    website_url
+    website_url,
+    users.id
 FROM users,
     user_details
 WHERE username = $1
@@ -225,6 +229,7 @@ type GetUserRow struct {
 	GithubUrl      string
 	UniversityName string
 	WebsiteUrl     string
+	ID             int64
 }
 
 // - user ---
@@ -242,6 +247,7 @@ func (q *Queries) GetUser(ctx context.Context, username string) (GetUserRow, err
 		&i.GithubUrl,
 		&i.UniversityName,
 		&i.WebsiteUrl,
+		&i.ID,
 	)
 	return i, err
 }

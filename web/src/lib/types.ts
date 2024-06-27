@@ -48,4 +48,19 @@ export interface ProfileData {
   OnBoard: boolean;
   UserType: "org" | "user";
   Username: string;
+  EmployeeCount: number;
+  OrgAddress: string;
+  OrgName: string;
+  Pincode: number;
+  WebsiteUrl: string;
+}
+
+export interface JobProps {
+  Title: string;
+  Description: string;
+  Location: string;
+  Experience: string;
+  Language: string;
+  JobType: "full-time" | "part-time";
+  Flexibilty: "in-office" | "work-from-home";
 }

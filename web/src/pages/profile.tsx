@@ -7,6 +7,16 @@ import { useParams } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useEffect } from "react";
 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import useJobs from "@/hooks/useJobs";
+
 export function Profile() {
   const { error, isOrg, data } = useProfile();
   if (error) {
@@ -128,7 +138,7 @@ function OrgProfile({ data }: { data: ProfileData }) {
             <DetailsSection data={data} />
           </TabsContent>
           <TabsContent value="jobs">
-            <JobsSection data={data} />
+            <JobsSection />
           </TabsContent>
         </Tabs>
       </div>
@@ -139,13 +149,38 @@ function OrgProfile({ data }: { data: ProfileData }) {
 function DetailsSection({ data }: { data: ProfileData }) {
   return (
     <div>
-      <div></div>
+      <Details header={"orgnaisation name"} info={data.OrgName} />
+      <Details header={"Address"} info={data.OrgAddress} />
+      <Details header={"employees"} info={data.EmployeeCount} />
+      {data.WebsiteUrl !== "" ? (
+        <Details header={"website"} info={data.WebsiteUrl} />
+      ) : (
+        <></>
+      )}
     </div>
   );
 }
 
-function JobsSection({ data }: { data: ProfileData }) {
-  return <div>showing jobs</div>;
+function JobsSection() {
+  const { jobsList } = useJobs();
+  if (jobsList.length < 1) {
+    return <div>no jobs listed right now</div>;
+  }
+  return (
+    <div>
+      {jobsList.map((jobObj) => (
+        <Job
+          title={jobObj.Title}
+          description={jobObj.Description}
+          location={jobObj.Location}
+          experience={jobObj.Experience}
+          language={jobObj.Language}
+          jobType={jobObj.JobType}
+          flexibilty={jobObj.Flexibilty}
+        />
+      ))}
+    </div>
+  );
 }
 
 function UserProfile({ data }: { data: ProfileData }) {
@@ -187,6 +222,50 @@ function UserProfile({ data }: { data: ProfileData }) {
   return (
     <div>
       <div className="flex justify-center">{data.Username}</div>
+    </div>
+  );
+}
+
+function Details({ header, info }: { header: string; info: string | number }) {
+  return (
+    <div>
+      <div className="font-semibold text-xl">{header}: </div>
+      {info}
+    </div>
+  );
+}
+
+function Job({
+  title,
+  description,
+  location,
+  experience,
+  language,
+  jobType,
+  flexibilty,
+}: {
+  title: string;
+  description: string;
+  location: string;
+  experience: string;
+  language: string;
+  jobType: "full-time" | "part-time";
+  flexibilty: "in-office" | "work-from-home";
+}) {
+  return (
+    <div>
+      <Card>
+        <CardHeader>
+          <CardTitle>{title}</CardTitle>
+          <CardDescription>{description}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <p>Card Content</p>
+        </CardContent>
+        <CardFooter>
+          <p>Card Footer</p>
+        </CardFooter>
+      </Card>
     </div>
   );
 }
