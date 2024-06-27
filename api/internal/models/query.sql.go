@@ -251,7 +251,6 @@ SELECT username,
 FROM users,
     user_details
 WHERE username = $1
-    AND user_type = 'user'
     AND users.user_details_id = user_details.id
 `
 
