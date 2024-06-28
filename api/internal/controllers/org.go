@@ -21,6 +21,13 @@ func GetOrgByName(c *gin.Context) {
 		return
 	}
 
+	// session := sessions.Default(c)
+	// username, ok := session.Get("username").(string)
+	// userType := session.Get("userType")
+	// if !ok || username == "" {
+	// 	c.JSON(http.StatusConflict, gin.H{"error": "please login first"})
+	// }
+
 	q, ctx := db.GetDbConn()
 	user, err := q.GetOrg(*ctx, org.OrgName)
 	if err != nil {

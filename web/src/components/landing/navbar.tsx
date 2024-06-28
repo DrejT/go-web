@@ -7,6 +7,14 @@ import { Link, useLocation } from "react-router-dom";
 import { Button } from "../ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface NavItem {
   navName: string;
@@ -15,7 +23,7 @@ interface NavItem {
 }
 
 export function NavBar() {
-  const { isLoggedIn, username, userType } = useAuth();
+  const { isLoggedIn, username, userType, profileUrl } = useAuth();
   const p = useLocation();
   const url = p.pathname === "/login" ? "register" : "login";
   return (
@@ -31,13 +39,29 @@ export function NavBar() {
             <div>
               <NavigationMenuItem>
                 {isLoggedIn ? (
-                  <ProfileAvatar
-                    username={username}
-                    src=""
-                    h={10}
-                    w={10}
-                    usertype={userType}
-                  />
+                  <>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger>
+                        <ProfileAvatar
+                          username={username}
+                          src=""
+                          h={10}
+                          w={10}
+                          profileUrl={profileUrl}
+                        />
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuLabel>Options</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <Link to={profileUrl}>
+                          <DropdownMenuItem>Profile</DropdownMenuItem>
+                        </Link>
+                        <Link to="/logout">
+                          <DropdownMenuItem>Logout</DropdownMenuItem>
+                        </Link>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </>
                 ) : (
                   <Link to={url}>
                     <Button>{url}</Button>
@@ -127,15 +151,14 @@ export function ProfileAvatar({
   src,
   h,
   w,
-  usertype,
+  profileUrl,
 }: {
   username: string;
   src: string;
   h: number;
   w: number;
-  usertype: string;
+  profileUrl: string;
 }) {
-  const profileUrl = usertype === "org" ? "/org/" + username : "/" + username;
   return (
     <Link to={profileUrl} className="">
       <Avatar className={`rounded-full w-${w} h-${h} overflow-hidden`}>

@@ -31,7 +31,7 @@ export default function useJobs() {
         );
       }
     }
-  });
+  }, [error, orgName]);
   return {
     jobsList,
     error,

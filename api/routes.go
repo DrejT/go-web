@@ -25,6 +25,7 @@ func (r *router) SetupRouter(router *gin.Engine) {
 		authRouter.POST("/login", controllers.LoginAuth)
 		// authRouter.GET("/login")
 		authRouter.POST("/register", controllers.RegisterAuth)
+		authRouter.DELETE("/logout", controllers.LogoutAuth)
 		authRouter.GET("/session", controllers.RevalidateSession)
 
 		userRouter := api.Group("/user")

@@ -8,6 +8,7 @@ import RegisterPage from "@/pages/register";
 // import SearchPage from "@/pages/search";
 import { Profile } from "@/pages/profile";
 import { ProfileLayout } from "@/layouts/profile";
+import Logout from "@/components/logout";
 
 export function Router() {
   return (
@@ -38,6 +39,7 @@ export function Router() {
                 </RegisterFormLayout>
               }
             />
+            <Route path="logout" element={<Logout />} />
             {/* <Route path="search" element={<SearchPage />} /> */}
             <Route>
               <Route path="org">

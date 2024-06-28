@@ -42,6 +42,9 @@ func LoginAuth(c *gin.Context) {
 	// start a new session
 	session := sessions.Default(c)
 	session.Set("username", loginReq.Username)
+	if user.UserType == "org" {
+		session.Set("userType", "org")
+	}
 	if err := session.Save(); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save session"})
 		return
@@ -120,6 +123,18 @@ func RegisterAuth(c *gin.Context) {
 		"message": "registration successful",
 		"data":    user,
 	})
+}
+
+// logs out an active session
+func LogoutAuth(c *gin.Context) {
+	session := sessions.Default(c)
+	session.Clear()
+	err := session.Save()
+	if err != nil {
+		c.JSON(http.StatusConflict, gin.H{"error": "there was an error while logging out"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "successfully logged out"})
 }
 
 // check if a session exists using the requests session object

@@ -83,7 +83,7 @@ export function Profile() {
 }
 
 function OrgProfile({ data }: { data: ProfileData }) {
-  const { isLoggedIn, username, onboard, userType } = useAuth();
+  const { isLoggedIn, username, onboard, userType, profileUrl } = useAuth();
   const p = useParams();
   // user is viewing their own profile with an active session
   if (isLoggedIn && username === p.orgname) {
@@ -102,7 +102,7 @@ function OrgProfile({ data }: { data: ProfileData }) {
                 src=""
                 h={18}
                 w={18}
-                usertype="org"
+                profileUrl={profileUrl}
               />
               {data.Username}
             </div>
@@ -127,7 +127,7 @@ function OrgProfile({ data }: { data: ProfileData }) {
             src=""
             h={18}
             w={18}
-            usertype="org"
+            profileUrl={profileUrl}
           />
           <div className="text-center text-pretty font-semibold text-3xl m-4">
             {data.Username}
@@ -287,7 +287,7 @@ function AddJobButton() {
 }
 
 function UserProfile({ data }: { data: ProfileData }) {
-  const { isLoggedIn, username, onboard, userType } = useAuth();
+  const { isLoggedIn, username, onboard, userType, profileUrl } = useAuth();
   const p = useParams();
   // case where user is viewing their own profile with an active session
   if (isLoggedIn && username === p.username) {
@@ -306,7 +306,7 @@ function UserProfile({ data }: { data: ProfileData }) {
                 src=""
                 h={18}
                 w={18}
-                usertype="org"
+                profileUrl={profileUrl}
               />
               {data.Username}
             </div>

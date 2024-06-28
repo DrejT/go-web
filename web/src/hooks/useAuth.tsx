@@ -7,6 +7,7 @@ export function useAuth() {
   const [onboard, setOnboard] = useState<boolean>(false);
   const [userType, setUserType] = useState<string>("user");
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const profileUrl = userType === "org" ? "/org/" + username : "/" + username;
   useEffect(() => {
     try {
       (async function () {
@@ -33,5 +34,6 @@ export function useAuth() {
     setUsername,
     onboard,
     userType,
+    profileUrl,
   };
 }
