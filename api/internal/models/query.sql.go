@@ -17,10 +17,10 @@ INSERT INTO jobs (
         location,
         experience,
         job_type,
-        flexibilty
+        flexibility
     )
 VALUES ($1, $2, $3, $4, $5, $6, $7)
-RETURNING id, org_name, title, description, location, experience, language, job_type, flexibilty
+RETURNING id, org_name, title, description, location, experience, language, job_type, flexibility
 `
 
 type CreateNewJobParams struct {
@@ -30,7 +30,7 @@ type CreateNewJobParams struct {
 	Location    string
 	Experience  string
 	JobType     string
-	Flexibilty  string
+	Flexibility string
 }
 
 func (q *Queries) CreateNewJob(ctx context.Context, arg CreateNewJobParams) (Job, error) {
@@ -41,7 +41,7 @@ func (q *Queries) CreateNewJob(ctx context.Context, arg CreateNewJobParams) (Job
 		arg.Location,
 		arg.Experience,
 		arg.JobType,
-		arg.Flexibilty,
+		arg.Flexibility,
 	)
 	var i Job
 	err := row.Scan(
@@ -53,7 +53,7 @@ func (q *Queries) CreateNewJob(ctx context.Context, arg CreateNewJobParams) (Job
 		&i.Experience,
 		&i.Language,
 		&i.JobType,
-		&i.Flexibilty,
+		&i.Flexibility,
 	)
 	return i, err
 }
@@ -249,7 +249,7 @@ func (q *Queries) GetOrg(ctx context.Context, username string) (GetOrgRow, error
 }
 
 const getOrgJobs = `-- name: GetOrgJobs :many
-SELECT id, org_name, title, description, location, experience, language, job_type, flexibilty
+SELECT id, org_name, title, description, location, experience, language, job_type, flexibility
 FROM jobs
 WHERE org_name = $1
 `
@@ -273,7 +273,7 @@ func (q *Queries) GetOrgJobs(ctx context.Context, orgName string) ([]Job, error)
 			&i.Experience,
 			&i.Language,
 			&i.JobType,
-			&i.Flexibilty,
+			&i.Flexibility,
 		); err != nil {
 			return nil, err
 		}

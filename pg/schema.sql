@@ -23,7 +23,7 @@ CREATE TABLE jobs (
     experience text NOT NULL default '',
     language text NOT NULL default '',
     job_type text NOT NULL default '',
-    flexibilty text NOT NULL default ''
+    flexibility text NOT NULL default ''
 );
 CREATE TABLE full_name (
     id BIGSERIAL PRIMARY KEY,

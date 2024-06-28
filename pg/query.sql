@@ -128,7 +128,7 @@ INSERT INTO jobs (
         location,
         experience,
         job_type,
-        flexibilty
+        flexibility
     )
 VALUES ($1, $2, $3, $4, $5, $6, $7)
 RETURNING *;

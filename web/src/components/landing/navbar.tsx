@@ -23,7 +23,7 @@ interface NavItem {
 }
 
 export function NavBar() {
-  const { isLoggedIn, username, userType, profileUrl } = useAuth();
+  const { isLoggedIn, username, profileUrl } = useAuth();
   const p = useLocation();
   const url = p.pathname === "/login" ? "register" : "login";
   return (

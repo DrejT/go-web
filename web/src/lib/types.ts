@@ -56,6 +56,8 @@ export interface ProfileData {
 }
 
 export interface JobProps {
+  ID: number;
+  OrgName: string;
   Title: string;
   Description: string;
   Location: string;

@@ -25,7 +25,7 @@ type Job struct {
 	Experience  string
 	Language    string
 	JobType     string
-	Flexibilty  string
+	Flexibility string
 }
 
 type OrgDetail struct {

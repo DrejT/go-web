@@ -1,7 +1,7 @@
 import { API_URL } from "@/lib/utils";
 import axios from "axios";
 import { useEffect } from "react";
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function Logout() {
   const navigate = useNavigate();

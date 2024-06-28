@@ -89,7 +89,7 @@ func AddNewJob(c *gin.Context) {
 		Description: AddJobReq.Description,
 		JobType:     AddJobReq.JobType,
 		Experience:  AddJobReq.Experience,
-		Flexibilty:  AddJobReq.Flexibility,
+		Flexibility: AddJobReq.Flexibility,
 		Location:    AddJobReq.Location,
 	}
 

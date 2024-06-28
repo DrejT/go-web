@@ -2,9 +2,10 @@ import { ProfileAvatar } from "@/components/landing/navbar";
 import { Bio, GithubUrl, Onboard } from "@/components/profile";
 import { useAuth } from "@/hooks/useAuth";
 import useProfile from "@/hooks/useProfile";
-import { ProfileData } from "@/lib/types";
-import { useParams } from "react-router-dom";
+import { JobProps, ProfileData } from "@/lib/types";
+import { Link, useParams } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
   DialogContent,
@@ -104,8 +105,30 @@ function OrgProfile({ data }: { data: ProfileData }) {
                 w={18}
                 profileUrl={profileUrl}
               />
-              {data.Username}
+              <div className="text-center text-pretty font-semibold text-3xl m-4">
+                {data.Username}
+              </div>
             </div>
+          </div>
+          <div className="flex justify-center">
+            <Tabs defaultValue="details" className="">
+              <TabsList>
+                <TabsTrigger className="w-[400px]" value="details">
+                  Details
+                </TabsTrigger>
+                <TabsTrigger className="w-[400px]" value="jobs">
+                  Jobs
+                </TabsTrigger>
+              </TabsList>
+              <TabsContent value="details">
+                <DetailsSection data={data} />
+              </TabsContent>
+              <TabsContent value="jobs">
+                <JobsSection
+                  displayAddButton={isLoggedIn && username === p.orgname}
+                />
+              </TabsContent>
+            </Tabs>
           </div>
         </div>
       </div>
@@ -149,7 +172,9 @@ function OrgProfile({ data }: { data: ProfileData }) {
             <DetailsSection data={data} />
           </TabsContent>
           <TabsContent value="jobs">
-            <JobsSection />
+            <JobsSection
+              displayAddButton={isLoggedIn && username === p.orgname}
+            />
           </TabsContent>
         </Tabs>
       </div>
@@ -172,27 +197,22 @@ function DetailsSection({ data }: { data: ProfileData }) {
   );
 }
 
-function JobsSection() {
+function JobsSection({ displayAddButton }: { displayAddButton: boolean }) {
   const { jobsList, error } = useJobs();
   console.log(jobsList);
   return (
     <>
-      <AddJobButton />
+      {displayAddButton ? <AddJobButton /> : <></>}
       {!jobsList ? (
         <div className="text-center p-5">{error}</div>
       ) : (
-        <>
-          {jobsList.map((jobObj) => (
-            <Job
-              title={jobObj.Title}
-              description={jobObj.Description}
-              location={jobObj.Location}
-              experience={jobObj.Experience}
-              jobType={jobObj.JobType}
-              flexibility={jobObj.Flexibility}
-            />
+        <div className="mt-2">
+          {jobsList.map((jobObj: JobProps) => (
+            <>
+              <Job jobObj={jobObj} />
+            </>
           ))}
-        </>
+        </div>
       )}
     </>
   );
@@ -338,33 +358,23 @@ function Details({ header, info }: { header: string; info: string | number }) {
   );
 }
 
-function Job({
-  title,
-  description,
-  location,
-  experience,
-  jobType,
-  flexibility,
-}: {
-  title: string;
-  description: string;
-  location: string;
-  experience: string;
-  jobType: "full-time" | "part-time";
-  flexibility: "in-office" | "work-from-home";
-}) {
+function Job({ jobObj }: { jobObj: JobProps }) {
   return (
     <div>
       <Card>
         <CardHeader>
-          <CardTitle>{title}</CardTitle>
-          <CardDescription>{description}</CardDescription>
+          <Link to={`/org/${jobObj.OrgName}/jobs/${jobObj.ID}`}>
+            <CardTitle>{jobObj.Title}</CardTitle>
+          </Link>
+          {/* <CardDescription>{description}</CardDescription> */}
         </CardHeader>
         <CardContent>
-          <p>Card Content</p>
+          <p>{jobObj.Description}</p>
         </CardContent>
         <CardFooter>
-          <p>Card Footer</p>
+          <Badge className="mr-1">&gt; {jobObj.Experience} years</Badge>
+          <Badge className="mr-1">{jobObj.JobType}</Badge>
+          <Badge className="mr-1">{jobObj.Flexibility}</Badge>
         </CardFooter>
       </Card>
     </div>
