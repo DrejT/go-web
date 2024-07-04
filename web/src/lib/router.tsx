@@ -9,6 +9,7 @@ import RegisterPage from "@/pages/register";
 import { Profile } from "@/pages/profile";
 import { ProfileLayout } from "@/layouts/profile";
 import Logout from "@/components/logout";
+import JobPage from "@/pages/job";
 
 export function Router() {
   return (
@@ -59,6 +60,7 @@ export function Router() {
                     </RegisterFormLayout>
                   }
                 />
+                <Route path=":orgname/jobs/:jobid" element={<JobPage />} />
                 <Route
                   path=":orgname"
                   element={

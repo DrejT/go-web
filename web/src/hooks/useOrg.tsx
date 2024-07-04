@@ -9,6 +9,7 @@ export default function useOrg() {
   const loginUrl = isOrg ? "/org/login" : "/login";
   const registerUrl = isOrg ? "/org/register" : "/register";
   const profileUrl = isOrg ? "/org/" + orgName : "/" + params.username;
+  const username = params.username;
   return {
     path,
     isOrg,
@@ -17,5 +18,6 @@ export default function useOrg() {
     registerUrl,
     userType,
     profileUrl,
+    username,
   };
 }
