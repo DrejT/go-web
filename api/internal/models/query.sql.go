@@ -195,6 +195,29 @@ func (q *Queries) DeleteUser(ctx context.Context, id int64) error {
 	return err
 }
 
+const getJobById = `-- name: GetJobById :one
+SELECT id, org_name, title, description, location, experience, language, job_type, flexibility
+FROM jobs
+WHERE id = $1
+`
+
+func (q *Queries) GetJobById(ctx context.Context, id int64) (Job, error) {
+	row := q.db.QueryRow(ctx, getJobById, id)
+	var i Job
+	err := row.Scan(
+		&i.ID,
+		&i.OrgName,
+		&i.Title,
+		&i.Description,
+		&i.Location,
+		&i.Experience,
+		&i.Language,
+		&i.JobType,
+		&i.Flexibility,
+	)
+	return i, err
+}
+
 const getOrg = `-- name: GetOrg :one
 SELECT username,
     pass_hash,

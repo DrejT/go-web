@@ -132,3 +132,7 @@ INSERT INTO jobs (
     )
 VALUES ($1, $2, $3, $4, $5, $6, $7)
 RETURNING *;
+-- name: GetJobById :one
+SELECT *
+FROM jobs
+WHERE id = $1;

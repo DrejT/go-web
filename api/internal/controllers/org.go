@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/drejt/api/internal/db"
@@ -101,4 +102,26 @@ func AddNewJob(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "added job successfully", "data": job})
+}
+
+type OrgJobRequest struct {
+	OrgName string `form:"orgName" binding:"required"`
+	JobId   int    `form:"jobId" binding:"required"`
+}
+
+func GetOrgJobByID(c *gin.Context) {
+	var Request OrgJobRequest
+	if err := c.ShouldBind(&Request); err != nil {
+		c.JSON(http.StatusConflict, gin.H{"error": err.Error()})
+		return
+	}
+
+	q, ctx := db.GetDbConn()
+	job, err := q.GetJobById(*ctx, int64(Request.JobId))
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "the job was not found"})
+		return
+	}
+	fmt.Println(job, err)
+	c.JSON(http.StatusOK, gin.H{"message": "retireved job successfully", "data": job})
 }

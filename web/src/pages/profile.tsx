@@ -207,10 +207,10 @@ function JobsSection({ displayAddButton }: { displayAddButton: boolean }) {
         <div className="text-center p-5">{error}</div>
       ) : (
         <div className="mt-2">
-          {jobsList.map((jobObj: JobProps) => (
-            <>
+          {jobsList.map((jobObj: JobProps, index: number) => (
+            <div key={index}>
               <Job jobObj={jobObj} />
-            </>
+            </div>
           ))}
         </div>
       )}
