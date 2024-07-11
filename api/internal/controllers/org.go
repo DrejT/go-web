@@ -6,6 +6,7 @@ import (
 
 	"github.com/drejt/api/internal/db"
 	"github.com/drejt/api/internal/models"
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
@@ -124,4 +125,52 @@ func GetOrgJobByID(c *gin.Context) {
 	}
 	fmt.Println(job, err)
 	c.JSON(http.StatusOK, gin.H{"message": "retireved job successfully", "data": job})
+}
+
+type ApplyRequest struct {
+	JobId int `json:"jobID" binding:"required"`
+}
+
+func ApplyJob(c *gin.Context) {
+	var applyReq ApplyRequest
+	if err := c.ShouldBindJSON(&applyReq); err != nil {
+		c.JSON(http.StatusConflict, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	q, ctx := db.GetDbConn()
+	job, err := q.GetJobById(*ctx, int64(applyReq.JobId))
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "job not found"})
+	}
+
+	session := sessions.Default(c)
+	username, ok := session.Get("username").(string)
+	if !ok {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "invalid session, please login again",
+		})
+		return
+	}
+
+	user, err := q.GetUser(*ctx, username)
+
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "user not found, please login again"})
+		return
+	}
+
+	application := models.CreateNewJobApplicationParams{JobID: job.ID, ApplicantID: user.ID}
+	_, err = q.CreateNewJobApplication(*ctx, application)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "please try again later"})
+		return
+	}
+	d := make(map[string]string)
+	d["username"] = username
+	d["message"] = "applied successfully"
+
+	c.JSON(http.StatusOK, gin.H{"data": d})
 }

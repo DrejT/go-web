@@ -43,5 +43,5 @@ CREATE TABLE users (
 CREATE TABLE applications (
     id BIGSERIAL PRIMARY KEY,
     job_id BIGSERIAL NOT NULL references jobs(id),
-    applicants BIGSERIAL NOT NULL references users(id)
+    applicant_id BIGSERIAL NOT NULL references users(id)
 );

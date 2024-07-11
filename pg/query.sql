@@ -136,3 +136,8 @@ RETURNING *;
 SELECT *
 FROM jobs
 WHERE id = $1;
+--- applications ---
+-- name: CreateNewJobApplication :one
+INSERT INTO applications (job_id, applicant_id)
+VALUES ($1, $2)
+RETURNING *;

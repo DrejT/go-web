@@ -1,9 +1,13 @@
 import { Button } from "@/components/ui/button";
+import useJobApplyForm from "@/hooks/useJobApplyForm";
 import useJobData from "@/hooks/useJobData";
 import { Link } from "react-router-dom";
 
 export default function JobPage() {
   const { jobData, error } = useJobData();
+  const { error: applyError, handleSubmit } = useJobApplyForm(
+    jobData?.ID as number
+  );
   if (error) {
     return <div>{error}</div>;
   }
@@ -47,7 +51,11 @@ export default function JobPage() {
                   <p className="leading-relaxed text-lg mb-4">
                     {jobData?.Description}
                   </p>
-                  <Button type="submit">apply now</Button>
+                  <form onSubmit={handleSubmit}>
+                    <Button type="submit">apply now</Button>
+                  </form>
+                  <div>{applyError}</div>
+                  {/* TODO: add a modal form that takes necessary data and redirects to user profile  */}
                 </div>
               </div>
             </div>

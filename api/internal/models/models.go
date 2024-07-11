@@ -5,9 +5,9 @@
 package models
 
 type Application struct {
-	ID         int64
-	JobID      int64
-	Applicants int64
+	ID          int64
+	JobID       int64
+	ApplicantID int64
 }
 
 type FullName struct {

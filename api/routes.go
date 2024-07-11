@@ -40,6 +40,7 @@ func (r *router) SetupRouter(router *gin.Engine) {
 		orgRouter.Use(middlewares.VerifySession())
 		orgRouter.POST("/onboard", controllers.OrgOnBoard)
 		orgRouter.POST("/job/new", controllers.AddNewJob)
+		orgRouter.POST("/job/apply", controllers.ApplyJob)
 
 	}
 }

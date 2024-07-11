@@ -58,6 +58,25 @@ func (q *Queries) CreateNewJob(ctx context.Context, arg CreateNewJobParams) (Job
 	return i, err
 }
 
+const createNewJobApplication = `-- name: CreateNewJobApplication :one
+INSERT INTO applications (job_id, applicant_id)
+VALUES ($1, $2)
+RETURNING id, job_id, applicant_id
+`
+
+type CreateNewJobApplicationParams struct {
+	JobID       int64
+	ApplicantID int64
+}
+
+// - applications ---
+func (q *Queries) CreateNewJobApplication(ctx context.Context, arg CreateNewJobApplicationParams) (Application, error) {
+	row := q.db.QueryRow(ctx, createNewJobApplication, arg.JobID, arg.ApplicantID)
+	var i Application
+	err := row.Scan(&i.ID, &i.JobID, &i.ApplicantID)
+	return i, err
+}
+
 const createOrgDetails = `-- name: CreateOrgDetails :one
 INSERT INTO org_details (
         org_name,
