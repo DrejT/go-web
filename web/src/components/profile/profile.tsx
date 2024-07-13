@@ -14,6 +14,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { ReactNode } from "react";
 
 export function Onboard({ userType }: { userType: string }) {
   console.log(userType);
@@ -247,4 +248,12 @@ export function Bio({ isLoggedIn }: { isLoggedIn: boolean }) {
       </div>
     );
   }
+}
+
+export function ProfileHeaderLayout({ children }: { children: ReactNode }) {
+  return (
+    <div className="text-center text-pretty font-semibold text-3xl m-4">
+      {children}
+    </div>
+  );
 }

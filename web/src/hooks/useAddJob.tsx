@@ -17,13 +17,9 @@ export default function useAddJob() {
   async function onSubmit(data: JobProps) {
     try {
       console.log(data);
-      const res = await axios.post(
-        API_URL + "org/job/new",
-        { username, ...data },
-        {
-          withCredentials: true,
-        }
-      );
+      const res = await axios.post(API_URL + "org/job/new", data, {
+        withCredentials: true,
+      });
       if (res.status === 200) {
         setData(res.data?.data);
       }

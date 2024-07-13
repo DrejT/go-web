@@ -5,7 +5,7 @@ import useOrg from "./useOrg";
 import { ProfileData } from "@/lib/types";
 
 export default function useProfile() {
-  const [data, setData] = useState<ProfileData>({});
+  const [data, setData] = useState<ProfileData | {}>({});
   const [error, setError] = useState<string>("");
   const { isOrg, orgName, username } = useOrg();
 
