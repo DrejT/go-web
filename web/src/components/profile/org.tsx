@@ -1,11 +1,3 @@
-import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -23,9 +15,9 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProfileAvatar } from "@/components/landing/navbar";
-import { Onboard, ProfileHeaderLayout } from "./profile";
+import { Details, Job, Onboard, ProfileHeaderLayout } from "./profile";
 import { JobProps, ProfileData } from "@/lib/types";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function OrgProfile({ data }: { data: ProfileData }) {
@@ -125,15 +117,6 @@ function OrgDetailsSection({ data }: { data: ProfileData }) {
       ) : (
         <></>
       )}
-    </div>
-  );
-}
-
-function Details({ header, info }: { header: string; info: string | number }) {
-  return (
-    <div>
-      <div className="font-semibold text-xl">{header}: </div>
-      {info}
     </div>
   );
 }
@@ -244,28 +227,5 @@ function AddJobButton() {
         </form>
       </DialogContent>
     </Dialog>
-  );
-}
-
-function Job({ jobObj }: { jobObj: JobProps }) {
-  return (
-    <div>
-      <Card>
-        <CardHeader>
-          <Link to={`/org/${jobObj.OrgName}/jobs/${jobObj.ID}`}>
-            <CardTitle>{jobObj.Title}</CardTitle>
-          </Link>
-          {/* <CardDescription>{description}</CardDescription> */}
-        </CardHeader>
-        <CardContent>
-          <p>{jobObj.Description}</p>
-        </CardContent>
-        <CardFooter>
-          <Badge className="mr-1">&gt; {jobObj.Experience} years</Badge>
-          <Badge className="mr-1">{jobObj.JobType}</Badge>
-          <Badge className="mr-1">{jobObj.Flexibility}</Badge>
-        </CardFooter>
-      </Card>
-    </div>
   );
 }

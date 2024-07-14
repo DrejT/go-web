@@ -1,9 +1,11 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/drejt/api/internal/db"
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
 
@@ -30,4 +32,19 @@ func GetUserByUsername(c *gin.Context) {
 	user.PassHash = ""
 
 	c.JSON(200, gin.H{"message": "successfully fetched user", "data": user})
+}
+
+func GetUserApplications(c *gin.Context) {
+	session := sessions.Default(c)
+	uid := session.Get("uid").(int64)
+	fmt.Println(uid)
+
+	q, ctx := db.GetDbConn()
+	applications, err := q.GetUserApplications(*ctx, uid)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": applications})
 }

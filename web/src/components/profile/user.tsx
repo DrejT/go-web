@@ -1,16 +1,16 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useParams } from "react-router-dom";
-import { Onboard, ProfileHeaderLayout } from "./profile";
+import { Details, Job, Onboard, ProfileHeaderLayout } from "./profile";
 import { useAuth } from "@/hooks/useAuth";
 import { ProfileAvatar } from "../landing/navbar";
-import { ProfileData } from "@/lib/types";
+import { JobProps, ProfileData } from "@/lib/types";
+import useApplication from "@/hooks/useApplication";
 
 export default function UserProfile({ data }: { data: ProfileData }) {
   const { isLoggedIn, username, onboard, userType, profileUrl } = useAuth();
   const p = useParams();
-  // case where user is viewing their own profile with an active session
+  console.log(data);
   if (isLoggedIn && username === p.username) {
-    // if the user has not yet been onboarded
     if (!onboard) {
       return <Onboard userType={userType} />;
     }
@@ -38,19 +38,16 @@ export default function UserProfile({ data }: { data: ProfileData }) {
                 <TabsTrigger className="w-[400px]" value="details">
                   Details
                 </TabsTrigger>
-                <TabsTrigger className="w-[400px]" value="jobs">
-                  Jobs
+                <TabsTrigger className="w-[400px]" value="applications">
+                  applications
                 </TabsTrigger>
               </TabsList>
               <TabsContent value="details">
-                {/* <DetailsSection data={data} /> */}
-                user details
+                {" "}
+                <UserDetailsSection data={data} />
               </TabsContent>
-              <TabsContent value="jobs">
-                applied to
-                {/* <JobsSection
-                    displayAddButton={isLoggedIn && username === p.orgname}
-                  /> */}
+              <TabsContent value="applications">
+                <UserApplicationsSection />
               </TabsContent>
             </Tabs>
           </div>
@@ -74,7 +71,48 @@ export default function UserProfile({ data }: { data: ProfileData }) {
             <ProfileHeaderLayout>{data.Username}</ProfileHeaderLayout>
           </div>
         </div>
-        <div className="flex justify-center">{}</div>
+        <div className="flex justify-center">
+          <Tabs defaultValue="details" className="">
+            <TabsList>
+              <TabsTrigger className="w-[400px]" value="details">
+                Details
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="details">
+              {" "}
+              <UserDetailsSection data={data} />
+            </TabsContent>
+          </Tabs>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function UserDetailsSection({ data }: { data: ProfileData }) {
+  return (
+    <div>
+      <Details header={"Education"} info={data.Education} />
+      <Details header={"Github"} info={data.GithubUrl || "not provided"} />
+      <Details header={"College name"} info={data.CollegeName} />
+      <Details header={"University name"} info={data.UniversityName} />
+    </div>
+  );
+}
+
+function UserApplicationsSection() {
+  const { data, error } = useApplication();
+  if (error) {
+    return <div>{error}</div>;
+  }
+  return (
+    <div>
+      <div className="mt-2">
+        {data.map((jobObj: JobProps, index: number) => (
+          <div key={index}>
+            <Job jobObj={jobObj} />
+          </div>
+        ))}
       </div>
     </div>
   );

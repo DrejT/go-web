@@ -32,6 +32,7 @@ func (r *router) SetupRouter(router *gin.Engine) {
 		userRouter.POST("/", controllers.GetUserByUsername)
 		userRouter.Use(middlewares.VerifySession())
 		userRouter.POST("/onboard", controllers.UserOnBoard)
+		userRouter.GET("/applications", controllers.GetUserApplications)
 
 		orgRouter := api.Group("/org")
 		orgRouter.POST("/", controllers.GetOrgByName)

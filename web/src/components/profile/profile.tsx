@@ -1,3 +1,11 @@
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useGithubUrl } from "@/hooks/useGithubUrl";
@@ -15,6 +23,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { ReactNode } from "react";
+import { Link } from "react-router-dom";
+import { JobProps } from "@/lib/types";
 
 export function Onboard({ userType }: { userType: string }) {
   console.log(userType);
@@ -254,6 +264,44 @@ export function ProfileHeaderLayout({ children }: { children: ReactNode }) {
   return (
     <div className="text-center text-pretty font-semibold text-3xl m-4">
       {children}
+    </div>
+  );
+}
+
+export function Details({
+  header,
+  info,
+}: {
+  header: string;
+  info: string | number;
+}) {
+  return (
+    <div>
+      <div className="font-semibold text-xl">{header}: </div>
+      {info}
+    </div>
+  );
+}
+
+export function Job({ jobObj }: { jobObj: JobProps }) {
+  return (
+    <div>
+      <Card>
+        <CardHeader>
+          <Link to={`/org/${jobObj.OrgName}/jobs/${jobObj.ID}`}>
+            <CardTitle>{jobObj.Title}</CardTitle>
+          </Link>
+          {/* <CardDescription>{description}</CardDescription> */}
+        </CardHeader>
+        <CardContent>
+          <p>{jobObj.Description}</p>
+        </CardContent>
+        <CardFooter>
+          <Badge className="mr-1">&gt; {jobObj.Experience} years</Badge>
+          <Badge className="mr-1">{jobObj.JobType}</Badge>
+          <Badge className="mr-1">{jobObj.Flexibility}</Badge>
+        </CardFooter>
+      </Card>
     </div>
   );
 }

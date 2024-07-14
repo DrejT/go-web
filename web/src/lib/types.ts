@@ -53,6 +53,10 @@ export interface ProfileData {
   OrgName: string;
   Pincode: number;
   WebsiteUrl: string;
+  CollegeName: string
+  Education: string
+  GithubUrl: string
+  UniversityName: string
 }
 
 export interface JobProps {

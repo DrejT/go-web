@@ -42,6 +42,7 @@ func LoginAuth(c *gin.Context) {
 	// start a new session
 	session := sessions.Default(c)
 	session.Set("username", loginReq.Username)
+	session.Set("uid", user.ID)
 	if user.UserType == "org" {
 		session.Set("userType", "org")
 	}

@@ -141,3 +141,11 @@ WHERE id = $1;
 INSERT INTO applications (job_id, applicant_id)
 VALUES ($1, $2)
 RETURNING *;
+-- name: GetUserApplications :many
+SELECT *
+FROM jobs
+WHERE id IN (
+        SELECT job_id
+        FROM applications
+        WHERE applicant_id = $1
+    );

@@ -379,6 +379,46 @@ func (q *Queries) GetUser(ctx context.Context, username string) (GetUserRow, err
 	return i, err
 }
 
+const getUserApplications = `-- name: GetUserApplications :many
+SELECT id, org_name, title, description, location, experience, language, job_type, flexibility
+FROM jobs
+WHERE id IN (
+        SELECT job_id
+        FROM applications
+        WHERE applicant_id = $1
+    )
+`
+
+func (q *Queries) GetUserApplications(ctx context.Context, applicantID int64) ([]Job, error) {
+	rows, err := q.db.Query(ctx, getUserApplications, applicantID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Job
+	for rows.Next() {
+		var i Job
+		if err := rows.Scan(
+			&i.ID,
+			&i.OrgName,
+			&i.Title,
+			&i.Description,
+			&i.Location,
+			&i.Experience,
+			&i.Language,
+			&i.JobType,
+			&i.Flexibility,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getUsers = `-- name: GetUsers :one
 SELECT username,
     email,
